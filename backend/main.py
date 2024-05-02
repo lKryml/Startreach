@@ -1,4 +1,5 @@
 import bcrypt
+from typing import Union
 from app.models import User
 from fastapi import FastAPI
 from app.database import create_supabase_client
@@ -29,7 +30,30 @@ def create_user(user: User):
             return {"message": "User created successfully"}
         else:
             raise Exception({"message": "User creation failed"})
- 
+        
+ #GET
+@app.get('/user')
+def get_user(user_id: Union[str,None] = None):
+    if user_id:
+        user = supabase.from_("users")\
+            .select("id","name","email")\
+            .eq("id",user_id)\
+            .execute()
+        
+    if user:
+        return user
+    
+    else:
+        users = supabase.from_("users").select('*').execute()
+
+    if users:
+        return users
+    else:
+        raise Exception({"message": "User not found"})
+     
+     
+     
+
 
 @app.get("/")
 def main_route():
