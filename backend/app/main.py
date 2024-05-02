@@ -10,15 +10,15 @@ supabase = create_supabase_client()
 
 
 def user_exists(key: str = "email", value: str = None):
-    user = supabase.from_("users").select('*').eq(key, value).execute()
+    user = supabase.from_("users").select("*").eq(key, value).execute()
     return len(user.data) > 0
 
 
 @app.get("/")
 def main_route():
-    return {'message': 'Hello main route'}
+    return {"message": "Hello main route"}
 
 
 @app.get("/health")
 def health_check():
-    return {'message': 'Healthy'}
+    return {"message": "Healthy"}
