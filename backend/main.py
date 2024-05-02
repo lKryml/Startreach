@@ -68,8 +68,8 @@ def update_user(user_id: str,email: str, name: str):
 # DELETE
 @app.delete("/user")
 def delete_user(user_id:str):
-    if user_exists(user_id):
-        user = supabase.from_("users").delete().eq("id", user_id).execute()
+    if user_exists("id",user_id):
+        supabase.from_("users").delete().eq("id", user_id).execute()
         return {"message": "User deleted successfully"}
     else:
         raise Exception({"message": "User deletion failed"})
