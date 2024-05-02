@@ -51,9 +51,20 @@ def get_user(user_id: Union[str,None] = None):
     else:
         raise Exception({"message": "User not found"})
      
-     
-     
+# UPDATE/PUT
+@app.put("/user")
+def update_user(user_id: str,email: str, name: str):
+    user_email = email.lower()
 
+    if user_exists(value=user_email):
+        email_exists = supabase.from_("users").select("*").eq("email",user_email).execute()
+        if len(email_exists.data) > 0:
+            return {"message": "Email already exists"}
+    user = supabase.from_("users").update("name": name, "email": email).eq("id", user_id).execute()
+    if user:
+        return {"message": "User updated successfully"}
+    else:
+        raise Exception({"message": "User update failed"})
 
 @app.get("/")
 def main_route():
