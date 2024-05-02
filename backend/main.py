@@ -39,17 +39,14 @@ def get_user(user_id: Union[str,None] = None):
             .select("id","name","email")\
             .eq("id",user_id)\
             .execute()
-        
-    if user:
-        return user
-    
-    else:
-        users = supabase.from_("users").select('*').execute()
-
-    if users:
-        return users
-    else:
-        raise Exception({"message": "User not found"})
+        if user:
+            return user
+        else:
+            users = supabase.from_("users").select('*').execute()
+        if users:
+            return users
+        else:
+            raise Exception({"message": "User not found"})
      
 # UPDATE/PUT
 @app.put("/user")
@@ -60,9 +57,10 @@ def update_user(user_id: str,email: str, name: str):
         email_exists = supabase.from_("users").select("*").eq("email",user_email).execute()
         if len(email_exists.data) > 0:
             return {"message": "Email already exists"}
-    user = supabase.from_("users").update("name": name, "email": email).eq("id", user_id).execute()
+    user = supabase.from_("users").update({"name": name, "email": email}).eq("id", user_id).execute()
+
     if user:
-        return {"message": "User updated successfully"}
+        return {"message": "User updated successfully"} 
     else:
         raise Exception({"message": "User update failed"})
     
