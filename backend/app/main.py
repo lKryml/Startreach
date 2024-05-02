@@ -1,7 +1,9 @@
 import os
+
 import bcrypt
 from app.models import User
 from fastapi import FastAPI
+
 from supabase import create_supabase_client
 
 app = FastAPI()
