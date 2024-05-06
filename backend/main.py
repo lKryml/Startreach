@@ -87,3 +87,8 @@ def health_check():
 def get_countries():
     countries = supabase.from_("countries").select('*').execute()
     return countries
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="localhost", port=5555)
+    
