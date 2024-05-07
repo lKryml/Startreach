@@ -1,5 +1,5 @@
 import os
-from core.config import url, key
+from core import url, key
 from supabase import create_client, Client
 
 

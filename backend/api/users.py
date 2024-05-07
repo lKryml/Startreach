@@ -1,5 +1,5 @@
-from db.database import supabase
-from models.user import User
+from db import supabase
+from models import User
 from fastapi import APIRouter
 from typing import Union
 from crud import user_exists, create_user, get_user, update_user, delete_user
