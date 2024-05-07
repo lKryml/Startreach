@@ -5,4 +5,3 @@ from fastapi import FastAPI
 from backend.db.database import create_supabase_client
 
 app = FastAPI()
-
