@@ -3,11 +3,11 @@ from models.user import User
 from fastapi import APIRouter
 from typing import Union
 from crud import user_exists, create_user, get_user, update_user, delete_user
-router = APIRouter()
+route = APIRouter()
 
 
 # CREATE/POST
-@router.post("/user")
+@route.post("/user")
 def create_user(user: User):
     user_email = user.email.lower()
     # TODO implement hashing for password
@@ -30,7 +30,7 @@ def create_user(user: User):
 
 
 # GET
-@router.get("/user")
+@route.get("/user")
 def get_user(user_id: Union[str, None] = None):
     if user_id:
         user = (
@@ -50,7 +50,7 @@ def get_user(user_id: Union[str, None] = None):
 
 
 # UPDATE/PUT
-@router.put("/user")
+@route.put("/user")
 def update_user(user_id: str, email: str, name: str):
     user_email = email.lower()
 
@@ -74,7 +74,7 @@ def update_user(user_id: str, email: str, name: str):
 
 
 # DELETE
-@router.delete("/user")
+@route.delete("/user")
 def delete_user(user_id: str):
     if user_exists("id", user_id):
         supabase.from_("users").delete().eq("id", user_id).execute()

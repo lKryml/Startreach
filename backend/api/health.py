@@ -1,9 +1,9 @@
 from fastapi import APIRouter
 from models import HealthResponse
 
-router = APIRouter()
+route = APIRouter()
 
 
-@router.get("/health", response_model=HealthResponse)
+@route.get("/health", response_model=HealthResponse)
 def health_check():
     return {"message": "Healthy"}
