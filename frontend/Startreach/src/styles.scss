@@ -2,3 +2,14 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@font-face {
+  font-family: "Aileron", sans-serif !important;
+  src: url("/assets/fonts/Aileron-Black.otf") format("opentype");
+  src: url("/assets/fonts/Aileron-Bold.otf") format("opentype");
+  src: url("/assets/fonts/Aileron-Heavy.otf") format("opentype");
+  src: url("/assets/fonts/Aileron-Light.otf") format("opentype");
+  src: url("/assets/fonts/Aileron-Regular.otf") format("opentype");
+  src: url("/assets/fonts/Aileron-Thin.otf") format("opentype");
+  src: url("/assets/fonts/Aileron-UltraLight.otf") format("opentype");
+}
