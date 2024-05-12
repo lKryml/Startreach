@@ -7,4 +7,4 @@ class ProfileModel(BaseModel):
     email: str
     avatar: str
     description: str
-    phones: List
+    phones: List[str]

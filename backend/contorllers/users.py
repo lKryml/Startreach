@@ -1,3 +1,4 @@
+from utils.logger import logger
 from cgi import print_exception
 from typing import Union, List
 from http import HTTPStatus
@@ -6,31 +7,30 @@ from models import UserModel, PaginationModel
 from services import users_service
 from db import supabase
 from fastapi import APIRouter, Request
-from utils.request_handler import throw_exception, response_json
+from utils.request_handler import throw_exception, response_json, get_id_param
 
 
 router = APIRouter()
 
 @router.post('/api/users')
-def create_user(user: UserModel):
-    user_email = user.email.lower()
+def create_user(body: UserModel):
     # TODO implement hashing for password
-    hashed_password = user.password
+    # if users_service.user_exists(value=body.email.lower(), key='email'):
+    #     return throw_exception(
+    #         Exception({ "message": "User already exists" }), HTTPStatus.NOT_ACCEPTABLE)
 
-    if users_service.user_exists(value=user_email):
-        return throw_exception({ "message": "User already exists" }, HTTPStatus.NOT_ACCEPTABLE)
-
-    user = users_service.create_user(user)
-
-    if user:
-        return response_json({"message": "User created successfully"})
-    else:
-        return throw_exception({"message": "User creation failed"}, HTTPStatus.INTERNAL_SERVER_ERROR)
+    [user, err] = users_service.create_user(body)
+    if err:
+        print(err)
+        return throw_exception(err, status_code=HTTPStatus.UNPROCESSABLE_ENTITY)
+    return response_json(user, HTTPStatus.CREATED) if user else throw_exception(
+        err,
+        HTTPStatus.UNPROCESSABLE_ENTITY
+    )
 
 
 @router.get('/api/users')
 def get_users(req: Request):
-    print("Error Not HAndled Corresponding Users")
     try:
         pagination: PaginationModel = PaginationModel(
             page=int(req.query_params.get('page', 1)),
@@ -38,59 +38,48 @@ def get_users(req: Request):
             sort_by=req.query_params.get('sort_by', 'id'),
             sort_order=req.query_params.get('sort_order', 'asc'),
         )
-        print(pagination);
-        users = users_service.get_users(pagination=pagination)
-        print("Error Not HAndled Corresponding Users 2222")
+        [users, err] = users_service.get_users(pagination=pagination)
     except ValidationError as e:
         print_exception(e.json())
-        return throw_exception(e.json(), HTTPStatus.INTERNAL_SERVER_ERROR)
+        return throw_exception(e, HTTPStatus.INTERNAL_SERVER_ERROR)
     if users:
-        print(users)
-        return response_json(users.data)
+        return response_json(users)
     else:
-        raise throw_exception({ "message": "Something went wrong!" }, HTTPStatus.INTERNAL_SERVER_ERROR)
+        return throw_exception(err if err else { "message": "Something went wrong!" }, HTTPStatus.INTERNAL_SERVER_ERROR)
 
 
 @router.get('/api/users/{id}')
-def get_user(id: Union[str] = None):
-    print(id)
-    if id:
-        user = (
-            supabase.from_("users")
-            .select("id", "first_name", "last_name", "email")
-            .limit(1)
-            .eq("id", id)
-            .execute()
-        )
-        print(user)
-        if user:
-            return { "data": user.data }
-        else:
-            raise throw_exception({"message": "User not found"}, HTTPStatus.NOT_FOUND)
+def get_user(id: Union[str]):
+    id = get_id_param(id)
+    if id is None or id < 0:
+        return throw_exception({"message": "please provide the correct id"}, HTTPStatus.UNPROCESSABLE_ENTITY)
+    user = users_service.get_user(id)
+    print(user)
+    if user:
+        return { "data": user.data }
+    else:
+        return throw_exception({"message": "user not found"}, HTTPStatus.NOT_FOUND)
 
 @router.put('/api/users/{id}')
-def update_user(id: str, email: str, name: str):
-    user_email = email.lower()
-
-    if user_exists(value=user_email):
-        return {"message": "Email already exists"}
-    user = (
-        supabase.from_("users")
-        .update({"name": name, "email": email})
-        .eq("id", id)
-        .execute()
-    )
-
+def update_user(id: str, user: UserModel):
+    id = get_id_param(id)
+    if id is None or id < 0:
+        return throw_exception({"message": "please provide the correct id"}, HTTPStatus.UNPROCESSABLE_ENTITY)
+    
+    [user, err] = users_service.update_user(id=id, item=user)
     if user:
-        return {"message": "User updated successfully"}
+        return response_json({ "message": "item updated successfully" })
     else:
-        raise throw_exception({"message": "User update failed"})
+        return throw_exception(err.json())
 
 
 @router.delete('/api/users/{id}')
 def delete_user(id: str):
-    if user_exists("id", id):
-        supabase.from_("users").delete().eq("id", id).execute()
-        return {"message": "User deleted successfully"}
+    id = get_id_param(id)
+    if id is None or id < 0:
+        return throw_exception({"message": "please provide the correct id"}, HTTPStatus.UNPROCESSABLE_ENTITY)
+    [results, err] = users_service.delete_user(id=id)
+    if err:
+        return throw_exception({"message": "failed to delete item"})
     else:
-        raise throw_exception({"message": "User deletion failed"})
+        return response_json(results,statusCode=HTTPStatus.OK)
