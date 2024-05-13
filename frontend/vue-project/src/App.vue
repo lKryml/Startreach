@@ -1,7 +1,6 @@
-<script setup lang="ts">
+<!-- <script setup lang="ts">
 import { RouterLink, RouterView } from "vue-router";
 </script>
-
 
 <template>
   <header>
@@ -14,7 +13,6 @@ import { RouterLink, RouterView } from "vue-router";
     />
 
     <div class="wrapper">
-      <HelloWorld msg="You did it!" />
 
       <nav>
         <RouterLink to="/">Home</RouterLink>
@@ -25,5 +23,6 @@ import { RouterLink, RouterView } from "vue-router";
 
   <RouterView />
 </template>
-
-<style scoped></style>
+<style scoped></style> -->
+<script setup></script>
+<template>Hello</template>

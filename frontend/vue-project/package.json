@@ -15,6 +15,7 @@
     "type-check": "vue-tsc --build --force"
   },
   "dependencies": {
+    "supabase": "^1.165.0",
     "vue": "^3.4.21",
     "vue-router": "^4.3.0"
   },
