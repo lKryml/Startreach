@@ -1,14 +1,5 @@
 <template>
-	<div class="home">
-		<img alt="Vue logo" src="../../assets/logo.png" />
-		<div>Welcome to Your Vue.js + TypeScript App</div>
-	</div>
+	<div class="flex container justify-center items-center">Home Page</div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue"
-
-export default defineComponent({
-	name: "HomeView"
-})
-</script>
+<script setup lang="ts"></script>

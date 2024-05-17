@@ -13,7 +13,6 @@ class GeneralService():
     def create(self, item):
         try:
             data = supabase.table(self.table_name).insert(item).execute()
-            print(data)
         except PostgrestAPIError as e:
             print("Error: ", e.json())
             return [None, e.json()]

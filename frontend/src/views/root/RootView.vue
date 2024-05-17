@@ -1,18 +1,10 @@
 <template>
-	<h1>Hello From Root Control Panel {{ msg }}</h1>
+	<h1>Root Header Goes Here</h1>
+	<router-view />
 </template>
-<script lang="ts">
-import { defineComponent } from "vue"
-
-export default defineComponent({
-	beforeMount() {
-		console.log("Check If Authenticated!!")
-	},
-	data: () => {
-		return { msg: "fdsf sdf dsf" }
-	},
-	setup: () => {
-		return {}
-	}
+<script setup lang="ts">
+import { onBeforeMount } from "vue"
+onBeforeMount(() => {
+	console.log("Check If Authenticated!!")
 })
 </script>

@@ -2,21 +2,10 @@
 	<Dialog>{{ r }}</Dialog>
 	<Input type="text" placeholder="email@test.com" />
 </template>
-<script lang="ts">
-import { defineComponent } from "vue"
+<script setup lang="ts">
 import { Input } from "@shadcn/ui/input"
 import { Dialog } from "@shadcn/ui/dialog"
+import { ref } from "vue"
 
-export default defineComponent({
-	setup() {},
-	components: {
-		Input,
-		Dialog
-	},
-	data: () => {
-		return {
-			r: "dsadads"
-		}
-	}
-})
+const r = ref("Dialog Testing")
 </script>

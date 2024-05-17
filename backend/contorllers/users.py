@@ -4,9 +4,10 @@ from typing import Union, List
 from http import HTTPStatus
 from pydantic import ValidationError
 from models import UserModel, PaginationModel
-from services import users_service
+from services import users_service, auth_service
+from services.auth_service import auth_protecter
 from db import supabase
-from fastapi import APIRouter, Request
+from fastapi import APIRouter, Request, Depends
 from utils.request_handler import throw_exception, response_json, get_id_param
 
 
@@ -30,7 +31,13 @@ def create_user(body: UserModel):
 
 
 @router.get('/api/users')
-def get_users(req: Request):
+def get_users(req: Request, user: UserModel = Depends(auth_protecter)):
+    if not user:
+        return throw_exception({ "message": "Unauthorized!" }, status_code=HTTPStatus.UNAUTHORIZED)
+    else:
+        print("--------------------------------")
+        print(user, "From Header Mocked")
+        print("--------------------------------")
     try:
         pagination: PaginationModel = PaginationModel(
             page=int(req.query_params.get('page', 1)),

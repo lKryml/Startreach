@@ -14,3 +14,7 @@ class AppConfigModel(BaseModel):
     app_version: Annotated[str, Field(min_length=1)] = '1.0.0'
     is_debug: bool
     enviroment: Annotated[EnviromentModel, Field(min_length=1)] = 'production'
+    jwt_expires: int = 30
+    jwt_refresh: int = 15
+    jwt_secret: str = 'secret_key'
+    jwt_algorithm: str = 'HS256'
