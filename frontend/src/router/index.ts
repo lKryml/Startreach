@@ -5,10 +5,24 @@ import authRoutes from './auth.routes'
 import dashboardRoutes from './dashboard.routes'
 
 const routes = [
-	...publicRoutes,
-	...rootRoutes,
 	...authRoutes,
-	...dashboardRoutes,
+	{
+		path: '/dashboard',
+		name: 'publicIndex',
+		component: import('../views/dashboard/DashboardView.vue'),
+		children: dashboardRoutes,
+	}, {
+		path: '/r00t',
+		name: 'rootIndex',
+		component: import('../views/root/RootView.vue'),
+		children: rootRoutes,
+	},
+	{
+		path: '/',
+		name: 'publicIndex',
+		component: import('../views/public/IndexView.vue'),
+		children: publicRoutes
+	},
 	{
 		path: '/:pathMatch(.*)*',
 		redirect: '/'

@@ -1,7 +1,5 @@
-import bcrypt
 from supabase import PostgrestAPIResponse, PostgrestAPIError
 from .general_service import GeneralService
-from .auth_service import signup
 from models import UserModel, PaginationModel
 from db import supabase
 from typing import List, Union
@@ -13,21 +11,25 @@ def user_exists(key: str = "email", value: str = None, id = None) -> bool:
     if id:
         query = query.not_eq("id", id)
     user_count = query.limit(1).execute()
-    print(user_count)
-    return True if not not user_count.data.count else False
+    print("================================")
+    print("================================")
+    print(user_count.data)
+    print(len(user_count.data))
+    print("================================")
+    print("================================")
+    return True if len(user_count.data) != 0 else False
 
 
-def create_user(user: UserModel, is_sinup: bool = False) -> Union[PostgrestAPIResponse | None, Exception | PostgrestAPIError | None]:
+def create_user(user: UserModel, is_login: bool = False) -> Union[PostgrestAPIResponse | None, Exception | PostgrestAPIError | None]:
     user_email = user.email.lower()
     # TODO implement hashing for password
     # hashed_password = bcrypt.hashpw(user.password.encode(), bcrypt.gensalt())
     # print(hashed_password.decode('utf-8'))
-    print(user_email)
     if user_exists(key='email', value=user_email):
         return [None, {"message": "User already exists"}]
     [user, err] = GeneralService(table_name=table_name).create(user.model_dump())
-    if err is None and is_sinup:
-        print(signup({'email': user.email, 'password': user.password }))
+    # if err is None and is_login:
+    #     print(login({'email': user.email, 'password': user.password }))
     return [user, err]
 
 
@@ -42,7 +44,7 @@ def get_users(pagination: PaginationModel) -> Union[PostgrestAPIResponse | None,
 
 def update_user(id: str, item):
     if user_exists(key='email', value=item.email, id=id):
-        return [None, PostgrestAPIError({"message": "Email already exists"})]
+        return [None, PostgrestAPIError({"message": "Email already exists"}).json()]
     try:
         user = (
             supabase.table(table_name=table_name)

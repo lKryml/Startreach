@@ -1,34 +1,26 @@
 import { UsersTypes } from '@/constants/usersTypes.contant';
+import type { IUsers } from '@/interfaces/users.interface';
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 // Testing Pania as state managment
 // Best Way For Me ... Flexible more
 export const useAuthStore = defineStore('auth', () => {
     const isAuth = ref(false);
+    const currentUser = ref<IUsers>();
     const userType = ref(UsersTypes.NORMAL);
-    const login = () => {
-        isAuth.value = !0;
+    const login = (user: IUsers) => {
+        currentUser.value = user;
+        isAuth.value = !!user?.access_token;
+        if (isAuth.value) {
+            localStorage.setItem('currentUser', JSON.stringify(user));
+        } else {
+            logout();
+        }
     }
     const logout = () => {
         isAuth.value = !!0;
+        localStorage.removeItem('currentUser');
     }
 
-    return { isAuth, userType, login, logout };
+    return { isAuth, userType, login, logout, currentUser };
 })
-// IDont Like this Way
-// export const useAuthStore = defineStore('auth', {
-
-//     state: () => ({
-//         isAuth: false,
-//         userType: UsersTypes.NORMAL,
-
-//     }),
-//     actions: {
-//         login() {
-//             this.isAuth = !0;
-//         },
-//         logout() {
-//             this.isAuth = !!0;
-//         }
-//     },
-// })

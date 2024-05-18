@@ -1,3 +1,5 @@
 <template>
-	<h1>Dashboard Page</h1>
+	<h1>Dashboard Header Goes Here</h1>
+	<router-view />
 </template>
+<script setup lang="ts"></script>

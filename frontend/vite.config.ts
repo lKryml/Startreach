@@ -13,6 +13,9 @@ export default defineConfig({
 			plugins: [tailwind(), autoprefixer()],
 		},
 	},
+	server: {
+		hmr: true
+	},
 	plugins: [
 		vue(),
 		vueJsx(),

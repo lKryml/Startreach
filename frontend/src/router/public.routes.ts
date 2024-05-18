@@ -1,11 +1,11 @@
 import { } from 'vue-router'
-import HomeView from '../views/public/HomeView.vue'
+// import  from '../views/public/HomeView.vue'
 
 const publicRoutes = [
     {
         path: '/',
         name: 'home',
-        component: HomeView
+        component: import('../views/public/HomeView.vue')
     },
     {
         path: '/about',

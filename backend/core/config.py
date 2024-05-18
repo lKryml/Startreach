@@ -17,7 +17,12 @@ __app_config = AppConfigModel(
     is_debug=os.environ.get('PYTHON_ENVIRONMENT') in ('development', 'test'),
 
     supabase_url=url,
-    supabase_key=key
+    supabase_key=key,
+    
+    jwt_secret=os.environ.get('JWT_SECRET_KEY'),
+    jwt_expires=os.environ.get('JWT_EXPIRES_BY_MINUTES'),
+    jwt_refresh=os.environ.get('JWT_REFRESH_BY_MINUTES'),
+    jwt_algorithm=os.environ.get('JWT_ALGORITHM') if os.environ.get('JWT_ALGORITHM') else 'HS256'
 )
 
 app_config = __app_config.model_dump()
