@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { onBeforeMount } from "vue"
+import * as authService from "@/services/auth.service"
+import { onBeforeMount, ref } from "vue"
 import { useRouter } from "vue-router"
 import { Button, Input, Label } from "@/shared/shadcn-ui/ui"
 import { useAuthStore } from "@/stores/auth.store"
@@ -7,7 +8,9 @@ import { useForm } from "vee-validate"
 import * as yup from "yup"
 
 import { useToast } from "@/shared/shadcn-ui/ui/toast"
+import { EyeClosedIcon, EyeOpenIcon } from "@radix-icons/vue"
 
+const passwordInputType = ref("password")
 const authStore = useAuthStore()
 const router = useRouter()
 const authValidatorSchema = yup.object({
@@ -26,13 +29,7 @@ onBeforeMount(() => {
 })
 const getError = (field: string) => errors.value?.[field] as string
 const onSubmitForm = async (_values: any) => {
-	const response = await fetch(`http://127.0.0.1:8000/auth/login`, {
-		method: "POST",
-		headers: {
-			"Content-Type": "application/json"
-		},
-		body: JSON.stringify(_values)
-	}).catch((err) => console.log(err))
+	const response = await authService.login(_values)
 	const currentUser = response?.json ? await response.json() : undefined
 	if (!currentUser) {
 		return toast({
@@ -53,10 +50,15 @@ const onSubmit = handleSubmit(onSubmitForm, onSubmitFormErrors)
 <template>
 	<form
 		@submit.prevent="onSubmit"
-		class="w-full h-dvh lg:grid lg:min-h-[600px] lg:grid-cols-2 xl:min-h-[800px]"
+		class="w-full h-dvh lg:grid lg:min-h-[600px] xl:min-h-[800px] lg:grid-cols-[350px_1fr]"
 	>
+		<div class="hidden bg-muted lg:block">
+			<div
+				class="h-dvh w-full bg-gradient-to-bl from-violet-500 to-blue-500 bg-[url('https://cdn.dribbble.com/userupload/12700543/file/original-2f761db0abe85c110884800f36395c9e.png?resize=1600x1200')] bg-[center_-283px]"
+			></div>
+		</div>
 		<div class="flex items-center justify-center py-12">
-			<div class="mx-auto grid w-[350px] gap-6">
+			<div class="mx-auto grid sm:w-[450px] w-[350px] gap-6">
 				<div class="grid gap-2 text-center">
 					<h1 class="text-3xl font-bold">{{ $t("AUTH.LOGIN") }}</h1>
 					<p class="text-balance text-muted-foreground">
@@ -67,6 +69,7 @@ const onSubmit = handleSubmit(onSubmitForm, onSubmitFormErrors)
 					<div class="grid gap-2">
 						<Label for="email">{{ $t("USERS.EMAIL") }}</Label>
 						<Input
+							class="h-12"
 							v-model="email"
 							v-bind="emailAttrs"
 							id="email"
@@ -86,27 +89,29 @@ const onSubmit = handleSubmit(onSubmitForm, onSubmitFormErrors)
 							</a>
 						</div>
 						<Input
+							class="h-12"
 							v-model="password"
 							v-bind="passwordAttrs"
 							id="password"
-							type="password"
 							v-bind:class="{ 'border-destructive': getError('password') }"
 							required
+							:type="passwordInputType || 'password'"
 						/>
+						<span v-if="passwordInputType === 'password'"
+							><EyeClosedIcon @click="passwordInputType = 'text'"
+						/></span>
+						<span v-else><EyeOpenIcon @click="passwordInputType = 'password'" /></span>
 					</div>
-					<Button type="submit" class="w-full"> {{ $t("AUTH.LOGIN") }} </Button>
-					<Button variant="outline" class="w-full"> Login with Google </Button>
+					<Button class="h-12 w-full" type="submit"> {{ $t("AUTH.LOGIN") }} </Button>
+					<!-- <Button class="h-12 w-full" variant="outline"> Login with Google </Button> -->
 				</div>
 				<div class="mt-4 text-center text-sm">
 					{{ $t("AUTH.DONT_HAVE_ACCOUNT") }}
 					<router-link to="/auth/register" class="underline">
-						{{ $t("AUTH.REGISTER") }}
+						{{ $t("AUTH.CREATE_NEW_ACCOUNT") }}
 					</router-link>
 				</div>
 			</div>
-		</div>
-		<div class="hidden bg-muted lg:block">
-			<div class="h-dvh w-full bg-gradient-to-bl from-violet-500 to-blue-500"></div>
 		</div>
 	</form>
 </template>

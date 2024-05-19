@@ -13,6 +13,17 @@ from utils.request_handler import throw_exception, response_json, get_id_param
 
 router = APIRouter()
 
+@router.get('/api/users/check-email')
+def check_email(req: Request):
+    email = req.query_params.get('email')
+    if not email:
+        return throw_exception({ "message": "please provide the email" }, HTTPStatus.UNPROCESSABLE_ENTITY)
+    if users_service.user_exists(value=email.lower(), key='email'):
+        return throw_exception({ "message": "User already exists" }, HTTPStatus.NOT_ACCEPTABLE)
+    else:
+        return response_json({ "message": "Email is available" })
+
+
 @router.post('/api/users')
 def create_user(body: UserModel):
     # TODO implement hashing for password

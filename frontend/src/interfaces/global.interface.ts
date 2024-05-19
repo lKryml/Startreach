@@ -1,0 +1,1 @@
+export { FileIcon as LucidIcon } from "lucide-vue-next";

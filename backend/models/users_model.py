@@ -20,8 +20,8 @@ class UserModel(BaseModel):
     last_name: Annotated[str | None, Field(min_length=2)] = None
     email: Annotated[str, Field(pattern=r"")]
     password: Annotated[str, Field(min_length=4)]
-    user_type: Annotated[int, Field(min=1, max=10)] = UserTypes.DEFAULT
-    profile_id: Annotated[int, Field(gt=0)]
+    user_type: Annotated[int | None, Field(min=1, max=10)] = None # if not set then the user should complete inserting information
+    profile_id: Annotated[int | None, Field(gt=0)] = None
 
 
 class UserAuthenticatedModel(UserModel):

@@ -12,11 +12,13 @@ const authRoutes = [
         component: () => import('../views/auth/LoginView.vue')
     },
     {
+        path: '/auth/register-completion',
+        name: 'registercompletetion',
+        component: () => import('../views/auth/RegisterCompletionView.vue')
+    },
+    {
         path: '/auth/register',
         name: 'register',
-        // route level code-splitting
-        // this generates a separate chunk (about.[hash].js) for this route
-        // which is lazy-loaded when the route is visited.
         component: () => import(/* webpackChunkName: "about" */ '../views/auth/RegisterView.vue')
     }
 ]

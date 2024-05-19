@@ -50,7 +50,7 @@ def register(data: AuthModel):
             email=user_dict['email'], 
             password=hash_pass(user_dict['password']), 
             profile_id=1,
-            user_type=1
+            user_type=None
         )
     except ValidationError as e:
         return [None, e.json()]
@@ -105,6 +105,14 @@ async def auth_protecter(req: Request):
     except PostgrestAPIError as e:
         return None
     
-    
+def logout(user: UserModel):
+    try:
+        # all user tokens
+        # results = supabase.table(table_name=token_table_name).delete().eq('sub', user.user_id).execute()    
+        # or by the token he signed in with or something
+        results = supabase.table(table_name=token_table_name).delete().eq('token', user.access_token).execute()    
+    except PostgrestAPIError as e:
+        return [None, e.json()]
+    return [results, None]
     
     
