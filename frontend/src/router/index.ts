@@ -3,19 +3,36 @@ import publicRoutes from './public.routes'
 import rootRoutes from './root.routes'
 import authRoutes from './auth.routes'
 import dashboardRoutes from './dashboard.routes'
+import type { IUsers } from '@/interfaces/users.interface'
 
 const routes = [
-	...authRoutes,
+	{
+		path: '/auth',
+		name: 'authIndex',
+		component: import('../views/auth/AuthIndexView.vue'),
+		children: authRoutes,
+	},
+	{
+		path: '/auth/:pathMatch(.*)*',
+		redirect: '/auth/login'  // Redirect any unknown /auth routes to /auth/login
+	},
 	{
 		path: '/dashboard',
-		name: 'publicIndex',
-		component: import('../views/dashboard/DashboardView.vue'),
+		name: 'dashboardIndex',
+		component: import('../views/dashboard/DashboardIndexView.vue'),
 		children: dashboardRoutes,
+		meta: {
+			requiresAuth: true,
+		}
 	}, {
 		path: '/r00t',
 		name: 'rootIndex',
 		component: import('../views/root/RootView.vue'),
 		children: rootRoutes,
+		meta: {
+			requiresAuth: true,
+			isSuperUSer: true,
+		}
 	},
 	{
 		path: '/',
@@ -33,5 +50,16 @@ const router = createRouter({
 	history: createWebHistory(import.meta.env.BASE_URL),
 	routes
 })
+
+router.beforeEach((to, from, next) => {
+	if (!to.matched.some(record => record.meta.requiresAuth)) next();
+	// ----------------------------------------------------------------
+	const currentUser: IUsers = JSON.parse(localStorage.getItem('currentUser') || '{}')
+	if (!currentUser?.access_token)
+		return next({ name: 'authroot' });
+	if (to.matched.some(record => record.meta.isSuperUSer) && !currentUser.is_root)
+		return next({ name: 'authroot' });
+	next();
+});
 
 export default router

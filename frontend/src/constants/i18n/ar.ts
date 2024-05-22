@@ -6,6 +6,8 @@ export const ar = {
     },
     GENERAL: {
         CONTACT_US: "اتصل بنا",
+        GET_STARTED: "ابدأ رحلتك الأن",
+        LEARN_MORE: "اعرف المزيد",
     },
     AUTH: {
         LOGIN: 'تسجيل الدخول',
@@ -49,5 +51,31 @@ export const ar = {
         USER_TYPE_DESCRIPTION_5: "جهة حكومية تسعى لتقديم معلومات لوارد الأعمال أو",
         USER_TYPE_DESCRIPTION_6: "جهة حكومية تسعى لتقديم معلومات لوارد الأعمال أو",
         USER_TYPE_DESCRIPTION_7: "جهة حكومية تسعى لتقديم معلومات لوارد الأعمال أو",
+    },
+    PROFILE: {
+        NAME_1: "الاسم",
+        NAME_2: "الاسم",
+        NAME_3: "الاسم",
+        NAME_4: "الاسم",
+        NAME_5: "الاسم",
+        NAME_6: "الاسم",
+        NAME_7: "الاسم",
+        BIO_1: "الوصف",
+        BIO_2: "الوصف",
+        BIO_3: "الوصف",
+        BIO_4: "الوصف",
+        BIO_5: "الوصف",
+        BIO_6: "الوصف",
+        BIO_7: "الوصف",
+        PHONE: "الهاتف",
+        FIRST_NAME: "الاسم",
+        LAST_NAME: "اللقب",
+        EMAIL: "البريد الاكترونى",
+        ADDRESS: "العنوان",
+    },
+    PROJECTS: {
+        PAGE_TITLE: "المشاريع",
+        ENTER_DETAILS: "يمكنك أضافة مشروع جديد",
+        LAUNCHE_DATE: "تاريخ اطلاق المشروع",
     }
 }

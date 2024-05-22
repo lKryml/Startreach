@@ -1,12 +1,17 @@
 import type { UsersTypes } from "@/constants/usersTypes.contant";
+import type { IProfile } from "./profile.interface";
 
 export interface IUsers {
+    id: number,
     first_name: string;
     last_name: string;
     email: string;
     password: string;
-    profile_id: string;
+    profile_id: number;
     access_token: string;
     refresh_token: string;
-    user_type: UsersTypes
+    user_type: UsersTypes,
+    is_root: boolean;
+
+    profile: IProfile;
 }

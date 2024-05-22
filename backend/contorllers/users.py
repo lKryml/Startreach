@@ -33,7 +33,6 @@ def create_user(body: UserModel):
 
     [user, err] = users_service.create_user(body)
     if err:
-        print(err)
         return throw_exception(err, status_code=HTTPStatus.UNPROCESSABLE_ENTITY)
     return response_json(user, HTTPStatus.CREATED) if user else throw_exception(
         err,
@@ -67,14 +66,13 @@ def get_users(req: Request, user: UserModel = Depends(auth_protecter)):
 
 
 @router.get('/api/users/{id}')
-def get_user(id: Union[str]):
+def get_user(id: str):
     id = get_id_param(id)
     if id is None or id < 0:
         return throw_exception({"message": "please provide the correct id"}, HTTPStatus.UNPROCESSABLE_ENTITY)
     user = users_service.get_user(id)
-    print(user)
     if user:
-        return { "data": user.data }
+        return response_json(user)
     else:
         return throw_exception({"message": "user not found"}, HTTPStatus.NOT_FOUND)
 
@@ -86,7 +84,7 @@ def update_user(id: str, user: UserModel):
     
     [user, err] = users_service.update_user(id=id, item=user)
     if user:
-        return response_json({ "message": "item updated successfully" })
+        return response_json(user)
     else:
         return throw_exception(err.json())
 

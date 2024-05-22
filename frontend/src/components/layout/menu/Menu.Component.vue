@@ -1,11 +1,11 @@
 <template>
-	<nav class="w-full flex justify-between items-center bg-transparent mb-4">
+	<nav class="w-full flex justify-between bg-navbar left-0 t-0 items-center mb-0 fixed top-0">
 		<div
 			class="w-full container flex justify-between items-center h-[70px] bg-transparent mb-4"
 		>
 			<div class="text-foreground flex justify-center items-center">
 				<Button
-					class="rounded-full shadow-none w-48 h-10 bg-secondary text-secondary-foreground"
+					class="rounded-full shadow-none w-48 h-10 bg-secondary text-secondary-foreground cursor-pointer"
 					>{{ t("GENERAL.CONTACT_US") }}</Button
 				>
 			</div>
@@ -16,13 +16,10 @@
 					:key="item.id"
 				></MenuItemComponent>
 			</div>
-			<!-- <router-link to="/auth/login"
-				><LogInIcon v-show="1 === parseFloat('3.2')"></LogInIcon>
-				{{ $t("AUTH.LOGIN") }}</router-link
-			> -->
 			<div class="flex justify-self-end items-center">
 				<img src="../../../assets/logo.png" class="w-9 h-auto max-h-9" />
 			</div>
+			<slot></slot>
 		</div>
 	</nav>
 </template>

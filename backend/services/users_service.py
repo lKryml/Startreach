@@ -11,12 +11,6 @@ def user_exists(key: str = "email", value: str = None, id = None) -> bool:
     if id:
         query = query.not_eq("id", id)
     user_count = query.limit(1).execute()
-    print("================================")
-    print("================================")
-    print(user_count.data)
-    print(len(user_count.data))
-    print("================================")
-    print("================================")
     return True if len(user_count.data) != 0 else False
 
 
@@ -39,12 +33,20 @@ def get_user(id: Union[PostgrestAPIResponse, None] = None):
 
 def get_users(pagination: PaginationModel) -> Union[PostgrestAPIResponse | None, PostgrestAPIError | None]:
     return GeneralService(table_name=table_name).find(pagination=pagination, model=UserModel, search_dict={})
-    
+
+def get_last_user_id():
+    try:
+        user = supabase.table(table_name=table_name).select("id").order("id", desc=True).limit(1).execute()
+    except PostgrestAPIError as err:
+        return [None, err.json()]
+    if len(user.data) == 0:
+        return [0, None]
+    return [user.data[0]['id'], None]    
 
 
-def update_user(id: str, item):
-    if user_exists(key='email', value=item.email, id=id):
-        return [None, PostgrestAPIError({"message": "Email already exists"}).json()]
+def update_user(id: str, item: dict):
+    # if user_exists(key='email', value=item.email, id=id):
+    #     return [None, PostgrestAPIError({"message": "Email already exists"}).json()]
     try:
         user = (
             supabase.table(table_name=table_name)
@@ -58,7 +60,6 @@ def update_user(id: str, item):
 
 
 def delete_user(id: str) -> Union[PostgrestAPIResponse | None, PostgrestAPIError | None]:
-    print(id)
     try:
         results = GeneralService(table_name=table_name).delete_by_id(id=id)
     except PostgrestAPIError as e:

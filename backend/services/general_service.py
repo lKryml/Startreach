@@ -14,7 +14,7 @@ class GeneralService():
         try:
             data = supabase.table(self.table_name).insert(item).execute()
         except PostgrestAPIError as e:
-            print("Error: ", e.json())
+            print("Error From General", e)
             return [None, e.json()]
         return [data, None]
     
@@ -62,6 +62,10 @@ class GeneralService():
                     .delete().eq(by_key, by_value).execute()
             )
         return data
+    
+    
+    def upload_image(self):
+        pass
 
     def __get_search_query(self,query, model):
         # search_dict = {}

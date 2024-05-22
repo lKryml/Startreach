@@ -23,6 +23,24 @@ module.exports = {
 		},
 		extend: {
 			colors: {
+				navbar: {
+					DEFAULT: "var(--navbar)",
+					foreground: "var(--navbar-foreground)"
+				},
+				dashboard: {
+					DEFAULT: "var(--dashboard)",
+					foreground: "var(--dashboard-foreground)"
+				},
+				"dashboard-navbar": {
+					DEFAULT: "var(--dashboard-navbar)",
+					foreground: "var(--dashboard-navbar-foreground)"
+				},
+				"root-navbar": {
+					DEFAULT: "var(--root-navbar)",
+					foreground: "var(--root-navbar-foreground)"
+				},
+				"dashboard-navbar-border": "var(--dashboard-navbar-border)",
+				"root-navbar-border": "var(--dashboard-navbar-border)",
 				border: "var(--border)",
 				input: "var(--input)",
 				ring: "var(--ring)",

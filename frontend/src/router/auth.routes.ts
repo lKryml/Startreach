@@ -2,22 +2,17 @@
 
 const authRoutes = [
     {
-        path: '/auth',
-        name: 'authroot',
-        redirect: '/auth/login'
-    },
-    {
-        path: '/auth/login',
+        path: 'login',
         name: 'login',
         component: () => import('../views/auth/LoginView.vue')
     },
     {
-        path: '/auth/register-completion',
+        path: 'register-completion',
         name: 'registercompletetion',
         component: () => import('../views/auth/RegisterCompletionView.vue')
     },
     {
-        path: '/auth/register',
+        path: 'register',
         name: 'register',
         component: () => import(/* webpackChunkName: "about" */ '../views/auth/RegisterView.vue')
     }
