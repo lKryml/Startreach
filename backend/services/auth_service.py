@@ -1,93 +1,88 @@
+from utils.logger import logger
 from fastapi import Request
 from pydantic import ValidationError
-from core.config import app_config
-from models import AuthModel, UserModel, TokenModel, UserAuthenticatedModel
+from models import AuthModel, UserModel, UserAuthenticatedModel, ProfileModel
 from supabase import PostgrestAPIError
 from db import supabase
-from .users_service import user_exists
+from .tokens_service import create_token
+from .users_service import user_exists, get_user, update_user
 from .general_service import GeneralService
-import datetime
-from jose import jwt, JWTError
+from .profile_service import create_profile 
 
 table_name = 'users'
 token_table_name = 'tokens'
+profile_table_name = 'profile'
 
 def login(credentials: AuthModel):
-    user_data = supabase.table(table_name=table_name).select('*').eq('email', credentials.email).limit(1).execute()
+    user_data = supabase.table(table_name=table_name).select('*, profiles(*)').eq('email', credentials.email).limit(1).execute()
     if 0 == user_data.data.count or user_data.data[0]['password'] != hash_pass(credentials.password):
         return [None, PostgrestAPIError({"message": "user not found"}).json()]
-    user = UserModel(**user_data.data[0])
-    expires_at = datetime.datetime.utcnow() + datetime.timedelta(seconds=60 * int(app_config.get('jwt_expires')))
-    expires_at_format = expires_at.isoformat()
-    jwt_encoded = encode_jwt(user.id, expires_at=expires_at)
-    try:
-        token = TokenModel(
-            token=jwt_encoded,
-            sub=user.id,
-            expires=expires_at_format,
-            blocked=False
-        )
-    except ValidationError as e:
-        return [None, e.json()]
-    t = supabase.table(table_name=token_table_name).insert(token.model_dump()).execute()
-    print(decode_jwt(str(jwt_encoded)))
+    user_dict = user_data.data[0]
+    user_id = user_dict['id']
+    del user_dict['id']
+    user = UserModel(**user_dict)
+    [token, err] = create_token(user_id)
     user_dict = user.model_dump()
-    user_dict['access_token'] = jwt_encoded
-    user_dict['refresh_token'] = jwt_encoded
+    user_dict['id'] = user_id
+    user_dict['access_token'] = token.data[0]['token']
+    user_dict['refresh_token'] = token.data[0]['token']
     user_with_token = UserAuthenticatedModel(**user_dict)
-    print("User From AuthServiec", user_with_token)
     return [user_with_token.model_dump(), None]
 
 
-def register(data: AuthModel):
+def register(data: AuthModel, body: Request.body):
     if user_exists(key='email', value=data.email):
         return [None, {"message": "User already exists"}]
     
     user_dict = data.model_dump()
-    user_dict['profile_id'] = 1
     try:
         user = UserModel(
             email=user_dict['email'], 
             password=hash_pass(user_dict['password']), 
-            profile_id=1,
-            user_type=1
+            user_type=1,
+            profile_id=0
         )
     except ValidationError as e:
         return [None, e.json()]
-    [user, err] = GeneralService(table_name=table_name).create(user.model_dump(exclude=['id']))
+    [user, err] = GeneralService(table_name=table_name).create(user.model_dump(exclude=['id', 'profile_id', 'profile']))
+    if err is not None:
+        return [None, err]
     
-    return  [user, err]
+    
+    [token, err] = create_token(user.data[0]['id'])
+    user_dict = user.data[0]
+    user_dict['access_token'] = token.data[0]['token']
+    user_dict['refresh_token'] = token.data[0]['token']
+    user_with_token = UserAuthenticatedModel(**user_dict)
+    print("user_with_token: ", user_with_token.model_dump())
+    return [user_with_token.model_dump(), None]
+
+
+def complete_registration(user_id: int, profile: ProfileModel):
+    [user, err] = get_user(profile.user_id)
+    if user is None:
+        return [None, err.json()]
+
+    [new_profile, err] = create_profile(profile)
+    print(new_profile.data[0], "is New Profile")
+
+    if new_profile is None:
+        return [None, err.json()]
+    
+    [user_updated, err] = update_user(id=user_id, item={ 
+        "user_type": profile.profile_type, 
+        "profile_id": new_profile.data[0]["id"],
+    })
+    
+    return [new_profile.data[0], None]
+
 
 def hash_pass(password: str):
     return password
 
-def encode_jwt(user_id: str, expires_at: datetime.datetime):
-    secret = app_config.get('jwt_secret')
-    alogo = app_config.get('jwt_algorithm')
-    expires_at = datetime.datetime.utcnow() + datetime.timedelta(seconds=60 * int(app_config.get('jwt_expires')))
-    refresh_expires_at = datetime.datetime.utcnow() + datetime.timedelta(seconds=60 * int(app_config.get('jwt_refresh')))
-    return jwt.encode({
-        "sub": user_id,
-        "exp": expires_at.timestamp(),
-        "iat": refresh_expires_at.timestamp(),
-    }, secret, algorithm="HS256")
-    
-def decode_jwt(token):
-    secret = app_config.get('jwt_secret')
-    alogo = app_config.get('jwt_algorithm')
-    print("--------------------------------")
-    print(secret, alogo, token)
-    print("--------------------------------")
-    try:
-        jwt.decode(token, secret, algorithms=["HS256"])
-    except JWTError as e:
-        print(e)
-    return None
-
 async def auth_protecter(req: Request):
     jwt_encoded = req.headers.get('Authorization')
-    print(jwt_encoded)
-    
+
     # try:
     #     jwt_decoded = decode_jwt(token)
     #     user_id = jwt_decoded.get('sub')
@@ -105,6 +100,12 @@ async def auth_protecter(req: Request):
     except PostgrestAPIError as e:
         return None
     
-    
-    
-    
+def logout(user: UserModel):
+    try:
+        # all user tokens
+        # results = supabase.table(table_name=token_table_name).delete().eq('sub', user.user_id).execute()    
+        # or by the token he signed in with or something
+        results = supabase.table(table_name=token_table_name).delete().eq('token', user.access_token).execute()    
+    except PostgrestAPIError as e:
+        return [None, e.json()]
+    return [results, None]

@@ -7,20 +7,20 @@
 	>
 		<router-link
 			v-if="item.path"
-			class="flex flex-row justify-center items-center w-auto mx-2"
+			class="flex flex-row justify-center items-center w-auto mx-2 text-inherit"
 			:to="item.path"
 		>
 			{{ t(item?.label || "") }}
 			<span class="ms-1" v-show="item.icon"><item.icon :size="16"></item.icon></span>
 		</router-link>
-		<a
+		<router-link
 			v-else-if="item.url"
-			class="flex flex-row justify-center items-center w-auto mx-2"
-			:href="item.url"
+			class="flex flex-row justify-center items-center w-auto mx-2 text-inherit"
+			:to="item.url"
 		>
 			{{ t(item?.label || "") }}
 			<span class="ms-1" v-show="item.icon"><item.icon :size="16"></item.icon></span>
-		</a>
+		</router-link>
 		<Separator
 			v-else-if="item.isSeparator"
 			class="flex flex-row justify-center items-center w-auto"

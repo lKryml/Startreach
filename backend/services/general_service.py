@@ -14,7 +14,7 @@ class GeneralService():
         try:
             data = supabase.table(self.table_name).insert(item).execute()
         except PostgrestAPIError as e:
-            print("Error: ", e.json())
+            print("Error From General", e)
             return [None, e.json()]
         return [data, None]
     
@@ -26,7 +26,6 @@ class GeneralService():
                 .offset(pagination.per_page * (pagination.page-1))
                 .order((pagination.sort_by), desc=(True if pagination.sort_order is 'desc' else False))
         )
-        print(model)
         query = self.__get_search_query(query, model)
 
         try: 
@@ -62,6 +61,10 @@ class GeneralService():
                     .delete().eq(by_key, by_value).execute()
             )
         return data
+    
+    
+    def upload_image(self):
+        pass
 
     def __get_search_query(self,query, model):
         # search_dict = {}
