@@ -33,15 +33,18 @@
 				<div
 					class="text-foreground flex flex-row-reverse justify-end items-center text-lg md:text-md font-bold"
 				>
-					<Button
-						class="cursor-pointer rounded-full shadow-none ms-4 w-60 md:w-45 sm:w-30 h-14 bg-secondary text-secondary-foreground"
-						><router-link to="/auth/register">{{
-							t("GENERAL.GET_STARTED")
-						}}</router-link></Button
-					>
-					<Button
-						class="cursor-pointer rounded-full shadow-none w-60 md:w-45 sm:w-30 h-14 bg-transparent border-primary border-[2px] text-foreground"
-						>{{ t("GENERAL.CONTACT_US") }}</Button
+					<router-link to="/auth/register">
+						<Button
+							class="cursor-pointer rounded-full shadow-none ms-4 w-60 md:w-45 sm:w-30 h-14 bg-secondary text-secondary-foreground"
+							>{{ t("GENERAL.GET_STARTED") }}</Button
+						>
+					</router-link>
+
+					<router-link to="/about">
+						<Button
+							class="cursor-pointer rounded-full shadow-none w-60 md:w-45 sm:w-30 h-14 bg-transparent border-primary border-[2px] text-foreground"
+							>{{ t("GENERAL.CONTACT_US") }}</Button
+						></router-link
 					>
 				</div>
 			</div>

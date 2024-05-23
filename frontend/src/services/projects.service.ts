@@ -4,6 +4,7 @@ import type { IProjects } from "@/interfaces/project.interface"
 import { prepareSearchPagination } from "@/libs/requestify.lib";
 
 
+
 export const create = async (_values: IProjects) => (
     fetch(`${enviroment.apiUrl}/api/projects`, {
         method: "POST",
