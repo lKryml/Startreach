@@ -32,6 +32,7 @@ const props = defineProps<CardProps>()
 		<CardContent class="flex flex-col justify-between items-start">
 			<CardTitle class="text-xl font-bold">{{ props.title }}</CardTitle>
 			<CardDescription>{{ props.description }}</CardDescription>
+			<Button>Hello</Button>
 		</CardContent>
 	</Card>
 </template>

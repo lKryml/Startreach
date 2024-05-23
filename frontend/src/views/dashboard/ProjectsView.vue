@@ -48,16 +48,23 @@ onBeforeMount(async () => {
 </script>
 
 <template>
-	<PanelTitle v-bind:title="t('MENU.PROJECTS')"></PanelTitle>
-	<ItemCard
-		class="w-[300px]"
-		layout="vertical"
-		thumbnail="https://www.gardeners.com/globalassets/articles/gardening/2022content/5062-tomato-seedlings.jpg"
-		title="dsadads sad"
-		description="dasdasd as da sdasd as da sda dsasd"
-		:votes="{ up: 22, down: 2 }"
-		:date="new Date()"
-	></ItemCard>
+	<div class="border-amber-200 border flex h-full w-full flex-col">
+		<PanelTitle v-bind:title="t('MENU.PROJECTS')"></PanelTitle>
+		<div class="flex flex-row flex-wrap overflow-auto gap-4">
+			<ItemCard
+				v-for="project in projects"
+				:key="project.id"
+				class="w-[250px]"
+				layout="vertical"
+				:thumbnail="project.img"
+				:title="project.name"
+				:description="project.description"
+				:votes="{ up: 22, down: 2 }"
+				:date="new Date()"
+			>
+			</ItemCard>
+		</div>
+	</div>
 
 	<!-- <Table>
 		<TableCaption>A list of your recent projects.</TableCaption>
