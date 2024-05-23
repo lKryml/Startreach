@@ -23,13 +23,7 @@ def create_project(body: ProjectsModel, user: UserModel = Depends(auth_protecter
 
 
 @router.get('/api/projects')
-def get_projects(req: Request, project: ProjectsModel, user: UserModel = Depends(auth_protecter)):
-    if not project:
-        return throw_exception({ "message": "Unauthorized!" }, status_code=HTTPStatus.UNAUTHORIZED)
-    else:
-        print("--------------------------------")
-        print(project, "From Header Mocked")
-        print("--------------------------------")
+def get_projects(req: Request, user: UserModel = Depends(auth_protecter)):
     try:
         pagination: PaginationModel = PaginationModel(
             page=int(req.query_params.get('page', 1)),
@@ -38,10 +32,11 @@ def get_projects(req: Request, project: ProjectsModel, user: UserModel = Depends
             sort_order=req.query_params.get('sort_order', 'asc'),
         )
         [projects, err] = projects_service.get_projects(pagination=pagination)
+        print(projects.data, err)
     except ValidationError as e:
         return throw_exception(e, HTTPStatus.INTERNAL_SERVER_ERROR)
     if projects:
-        return response_json(projects)
+        return response_json(projects.data)
     else:
         return throw_exception(err if err else { "message": "Something went wrong!" }, HTTPStatus.INTERNAL_SERVER_ERROR)
 

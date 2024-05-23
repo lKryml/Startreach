@@ -26,7 +26,6 @@ class GeneralService():
                 .offset(pagination.per_page * (pagination.page-1))
                 .order((pagination.sort_by), desc=(True if pagination.sort_order is 'desc' else False))
         )
-        print(model)
         query = self.__get_search_query(query, model)
 
         try: 

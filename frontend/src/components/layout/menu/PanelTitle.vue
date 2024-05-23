@@ -1,8 +1,8 @@
 <template>
-	<div class="grid grid-cols-2 grid-flow-row">
-		<div class="flex justify-center items-start px-5">
+	<div class="grid grid-cols-2 grid-flow-row w-full p-10">
+		<div class="flex justify-start items-center">
 			<img v-show="icon" :src="icon" class="w-10 h-10 me-2" />
-			<h2>{{ title }}</h2>
+			<h2 class="text-3xl font-extrabold">{{ title }}</h2>
 		</div>
 	</div>
 </template>

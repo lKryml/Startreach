@@ -10,7 +10,7 @@ export interface IProjects {
     category_id: number,
     createdAt: Date,
     launch_date: Date,
-    is_deleted: boolean,
+    is_active: boolean,
     is_launched: boolean,
     need_investores: boolean,
 }

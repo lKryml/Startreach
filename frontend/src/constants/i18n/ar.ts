@@ -3,6 +3,7 @@ export const ar = {
         HOME: "الرئيسية",
         ABOUT: "عن التطبيق",
         DASHBOARD: "التحكم",
+        PROJECTS: "المشاريع",
     },
     GENERAL: {
         CONTACT_US: "اتصل بنا",

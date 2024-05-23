@@ -1,1 +1,2 @@
-<template>dsa asdads</template>
+<template>Dashboard Page</template>
+<script setup lang="ts"></script>
