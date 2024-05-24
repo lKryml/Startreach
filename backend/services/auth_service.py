@@ -1,10 +1,15 @@
+from datetime import datetime
+from jose import JWTError
+from http import HTTPStatus
 from utils.logger import logger
-from fastapi import Request
+from fastapi import Request, HTTPException
 from pydantic import ValidationError
 from models import AuthModel, UserModel, UserAuthenticatedModel, ProfileModel
+from models.users_model import UserTypes
 from supabase import PostgrestAPIError
 from db import supabase
-from .tokens_service import create_token
+from core.config import app_config
+from .tokens_service import create_token, decode_jwt
 from .users_service import user_exists, get_user, update_user
 from .general_service import GeneralService
 from .profile_service import create_profile 
@@ -54,7 +59,6 @@ def register(data: AuthModel, body: Request.body):
     user_dict['access_token'] = token.data[0]['token']
     user_dict['refresh_token'] = token.data[0]['token']
     user_with_token = UserAuthenticatedModel(**user_dict)
-    print("user_with_token: ", user_with_token.model_dump())
     return [user_with_token.model_dump(), None]
 
 
@@ -64,7 +68,6 @@ def complete_registration(user_id: int, profile: ProfileModel):
         return [None, err.json()]
 
     [new_profile, err] = create_profile(profile)
-    print(new_profile.data[0], "is New Profile")
 
     if new_profile is None:
         return [None, err.json()]
@@ -80,25 +83,64 @@ def complete_registration(user_id: int, profile: ProfileModel):
 def hash_pass(password: str):
     return password
 
-async def auth_protecter(req: Request):
-    jwt_encoded = req.headers.get('Authorization')
 
-    # try:
-    #     jwt_decoded = decode_jwt(token)
-    #     user_id = jwt_decoded.get('sub')
-    # except JWTError as e:
-    #     return None
-    user_id = 9 # for testing 
-    # token = supabase.table(table_name=token_table_name).select('*').eq('token', jwt_encoded).limit(1).execute()
-    token = supabase.table(table_name=token_table_name).select('*').eq('sub', user_id).limit(1).execute()
-    if len(token.data) == 0: # or token.user_id != user_id:
-        return None
-    # print(jwt_decoded)
-    try:
-        user = supabase.table(table_name=table_name).select('*').eq('id', user_id).execute()
-        return UserModel(**user.data[0])
-    except PostgrestAPIError as e:
-        return None
+def auth_protecter(roles: list[int] | None = None, is_superuser=False):
+    async def protector(req: Request):
+        # DELETE ON PRODUCTION MODE
+        if app_config.get('enviroment') == 'development':
+            logger.error("DELETE ON PRODUCTION MODE auth_service.auth_protecter line:91")
+            logger.error("DELETE ON PRODUCTION MODE auth_service.auth_protecter line:91")
+            logger.error("DELETE ON PRODUCTION MODE auth_service.auth_protecter line:91")
+            user = supabase.table(table_name=table_name).select('*').eq('id', 130).limit(1).execute()
+            if len(user.data) == 1:
+                return UserModel(**user.data[0])
+
+        jwt_encoded = req.headers.get('Authorization')
+        try:
+            user_token = jwt_encoded.replace("Bearer ", "")
+            jwt_decoded = decode_jwt(user_token)
+            user_id = int(jwt_decoded.get('sub'))
+        except JWTError as e:
+            raise HTTPException(
+                status_code=HTTPStatus.UNAUTHORIZED,
+                detail="unauthorized",
+                headers={"WWW-Authenticate": "Bearer"},
+            )
+        
+        current_time = datetime.utcnow().timestamp()
+        if jwt_decoded["exp"] < current_time:
+            raise HTTPException(
+                status_code=HTTPStatus.UNAUTHORIZED,
+                detail="unauthorized",
+                headers={"WWW-Authenticate": "Bearer"},
+            )
+        token = supabase.table(table_name=token_table_name).select('*').eq('token', user_token).limit(1).execute()
+        if len(token.data) == 0: # or token.user_id != user_id:
+            raise HTTPException(
+                status_code=HTTPStatus.UNAUTHORIZED,
+                detail="unauthorized",
+                headers={"WWW-Authenticate": "Bearer"},
+            )
+        try:
+            user = supabase.table(table_name=table_name).select('*').eq('id', user_id).execute()
+            user_dict = user.data[0]
+            if not user or ((is_superuser and not user.is_superuser)\
+                or (roles is not None \
+                    and (UserTypes.ALL not in roles and user.user_type not in roles)\
+                )):
+                raise HTTPException(
+                    status_code=HTTPStatus.UNAUTHORIZED,
+                    detail="unauthorized",
+                    headers={"WWW-Authenticate": "Bearer"},
+                )
+            return UserModel(**user_dict)
+        except PostgrestAPIError as e:
+            raise HTTPException(
+                status_code=HTTPStatus.UNAUTHORIZED,
+                detail="unauthorized",
+                headers={"WWW-Authenticate": "Bearer"},
+            )
+    return protector
     
 def logout(user: UserModel):
     try:

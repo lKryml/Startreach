@@ -3,7 +3,7 @@ from pydantic import BaseModel, Field
 from .profiles_model import ProfileModel
 
 
-class UsersTypesModel(BaseModel):
+class UsersTypesModel(BaseModel): 
     DEFAULT: int = 1
     COMPANY: int = 2
     INVESTOR: int = 3
@@ -11,6 +11,7 @@ class UsersTypesModel(BaseModel):
     NGO: int = 5
     EDUCATION: int = 6
     SYNDICATE: int = 7
+    ALL:int = 100
 
 UserTypes = UsersTypesModel()
 
@@ -22,7 +23,7 @@ class UserModel(BaseModel):
     password: Annotated[str, Field(min_length=4)]
     user_type: Annotated[int, Field(min=0, max=10)] = 0 # if not set then the user should complete inserting information
     profile_id: Annotated[int | None, Field(ge=0)] = None
-    
+    is_superuser: bool = False
     profile: Optional[ProfileModel | None] = None
 
 class UserAuthenticatedModel(UserModel):

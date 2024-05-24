@@ -1,14 +1,10 @@
-from utils.logger import logger
-from cgi import print_exception
-from typing import Union, List
 from http import HTTPStatus
 from pydantic import ValidationError
-from models import UserModel, PaginationModel
+from models import UserModel, PaginationModel, UserTypes
 from services import users_service, auth_service
 from services.auth_service import auth_protecter
-from db import supabase
 from fastapi import APIRouter, Request, Depends
-from utils.request_handler import throw_exception, response_json, get_id_param
+from utils.request_handler import throw_exception, response_json, get_id_param, append_body, whereify
 
 
 router = APIRouter()
@@ -24,77 +20,67 @@ def check_email(req: Request):
         return response_json({ "message": "Email is available" })
 
 
-@router.post('/api/users')
-def create_user(body: UserModel):
-    # TODO implement hashing for password
-    # if users_service.user_exists(value=body.email.lower(), key='email'):
-    #     return throw_exception(
-    #         Exception({ "message": "User already exists" }), HTTPStatus.NOT_ACCEPTABLE)
-
-    [user, err] = users_service.create_user(body)
+@router.post('/api/projects')
+async def create_project(body: UserModel, user: UserModel = Depends(auth_protecter([UserTypes.ALL]))):
+    [project, err] = auth_service.create_project(append_body(body, user))
     if err:
         return throw_exception(err, status_code=HTTPStatus.UNPROCESSABLE_ENTITY)
-    return response_json(user, HTTPStatus.CREATED) if user else throw_exception(
+    return response_json(project.data[0], HTTPStatus.CREATED) if project else throw_exception(
         err,
         HTTPStatus.UNPROCESSABLE_ENTITY
     )
 
 
-@router.get('/api/users')
-def get_users(req: Request, user: UserModel = Depends(auth_protecter)):
-    if not user:
-        return throw_exception({ "message": "Unauthorized!" }, status_code=HTTPStatus.UNAUTHORIZED)
-    else:
-        print("--------------------------------")
-        print(user, "From Header Mocked")
-        print("--------------------------------")
+@router.get('/api/projects')
+async def get_projects(req: Request, user: UserModel = Depends(auth_protecter())):
     try:
         pagination: PaginationModel = PaginationModel(
             page=int(req.query_params.get('page', 1)),
             per_page=int(req.query_params.get('per_page', 10)),
             sort_by=req.query_params.get('sort_by', 'id'),
             sort_order=req.query_params.get('sort_order', 'asc'),
+            where=whereify(user)
         )
-        [users, err] = users_service.get_users(pagination=pagination)
+        [projects, err] = auth_service.get_projects(pagination=pagination)
     except ValidationError as e:
-        print_exception(e.json())
         return throw_exception(e, HTTPStatus.INTERNAL_SERVER_ERROR)
-    if users:
-        return response_json(users)
+    if projects:
+        return response_json(projects.data)
     else:
         return throw_exception(err if err else { "message": "Something went wrong!" }, HTTPStatus.INTERNAL_SERVER_ERROR)
 
 
-@router.get('/api/users/{id}')
-def get_user(id: str):
+@router.get('/api/projects/{id}')
+async def get_project(id: str, user: UserModel = Depends(auth_protecter())):
     id = get_id_param(id)
     if id is None or id < 0:
         return throw_exception({"message": "please provide the correct id"}, HTTPStatus.UNPROCESSABLE_ENTITY)
-    user = users_service.get_user(id)
-    if user:
-        return response_json(user)
+    project = auth_service.get_project(id, where=whereify(user))
+    if project:
+        return response_json(project)
     else:
-        return throw_exception({"message": "user not found"}, HTTPStatus.NOT_FOUND)
+        return throw_exception({"message": "project not found"}, HTTPStatus.NOT_FOUND)
 
-@router.put('/api/users/{id}')
-def update_user(id: str, user: UserModel):
+@router.put('/api/projects/{id}')
+async def update_project(id: str, project: UserModel, user: UserModel = Depends(auth_protecter)):
     id = get_id_param(id)
     if id is None or id < 0:
         return throw_exception({"message": "please provide the correct id"}, HTTPStatus.UNPROCESSABLE_ENTITY)
-    
-    [user, err] = users_service.update_user(id=id, item=user)
-    if user:
-        return response_json(user)
+
+    project.profile_id = user.profile_id
+    [updated_project, err] = auth_service.update_project(id=id, item=project)
+    if updated_project:
+        return response_json(updated_project)
     else:
         return throw_exception(err.json())
 
 
-@router.delete('/api/users/{id}')
-def delete_user(id: str):
+@router.delete('/api/projects/{id}')
+async def delete_project(id: str, user: UserModel = Depends(auth_protecter)):
     id = get_id_param(id)
     if id is None or id < 0:
         return throw_exception({"message": "please provide the correct id"}, HTTPStatus.UNPROCESSABLE_ENTITY)
-    [results, err] = users_service.delete_user(id=id)
+    [results, err] = auth_service.delete_project(id=id, where=whereify(user))
     if err:
         return throw_exception({"message": "failed to delete item"})
     else:

@@ -32,7 +32,7 @@ def get_user(id: Union[PostgrestAPIResponse, None] = None):
     return GeneralService(table_name=table_name).find_by_id(id=id)
 
 def get_users(pagination: PaginationModel) -> Union[PostgrestAPIResponse | None, PostgrestAPIError | None]:
-    return GeneralService(table_name=table_name).find(pagination=pagination, model=UserModel, search_dict={})
+    return GeneralService(table_name=table_name).find(pagination=pagination, model=UserModel)
 
 def get_last_user_id():
     try:

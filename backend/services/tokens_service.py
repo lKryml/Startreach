@@ -30,20 +30,21 @@ def create_token(user_id):
 
 def encode_jwt(user_id: str, expires_at: datetime.datetime):
     secret = app_config.get('jwt_secret')
-    alogo = app_config.get('jwt_algorithm')
+    algo = app_config.get('jwt_algorithm')
     expires_at = datetime.datetime.utcnow() + datetime.timedelta(seconds=60 * int(app_config.get('jwt_expires')))
     refresh_expires_at = datetime.datetime.utcnow() + datetime.timedelta(seconds=60 * int(app_config.get('jwt_refresh')))
     return jwt.encode({
-        "sub": user_id,
+        "sub": str(user_id),
         "exp": expires_at.timestamp(),
         "iat": refresh_expires_at.timestamp(),
-    }, secret, algorithm="HS256")
-    
+    }, secret, algorithm=algo)
+
 def decode_jwt(token):
     secret = app_config.get('jwt_secret')
-    alogo = app_config.get('jwt_algorithm')
+    algo = app_config.get('jwt_algorithm')
     try:
-        jwt.decode(token, secret, algorithms=["HS256"])
+        decoded_jwt = jwt.decode(token, secret , algorithms=[algo])
+        return decoded_jwt
     except JWTError as e:
         print(e)
-    return None
+        raise JWTError(e)

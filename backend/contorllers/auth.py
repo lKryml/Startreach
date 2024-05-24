@@ -2,7 +2,7 @@ from utils.logger import logger
 from http import HTTPStatus
 from pydantic import ValidationError
 from models import AuthModel, UserModel, ProfileModel, ProfileInfoModel
-from services import auth_service, users_service
+from services import auth_service, tokens_service
 from db import supabase
 from fastapi import APIRouter, Request, Depends
 from utils.request_handler import throw_exception, response_json

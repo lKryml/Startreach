@@ -3,7 +3,7 @@ from typing import List, Union, Annotated, Optional
 from pydantic import BaseModel, Field
 
 
-class ProjectsModel(BaseModel):
+class WebinarsModel(BaseModel):
     name: str
     description: Annotated[str | None, Field(min_length=2)] = None
     category_id: Annotated[int | None, Field(min=1)] = None
