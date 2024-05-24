@@ -1,7 +1,7 @@
 from http import HTTPStatus
 from pydantic import ValidationError
-from models import ProjectsModel, PaginationModel, UserModel, UserTypes
-from services import projects_service
+from models import WebinarsModel, PaginationModel, UserModel, UserTypes
+from services import webinars_service
 from services.auth_service import auth_protecter
 from fastapi import APIRouter, Request, Depends
 from utils.request_handler import throw_exception, response_json, get_id_param, append_body, whereify
@@ -9,19 +9,19 @@ from utils.request_handler import throw_exception, response_json, get_id_param, 
 
 router = APIRouter()
 
-@router.post('/api/projects')
-async def create_project(body: ProjectsModel, user: UserModel = Depends(auth_protecter([UserTypes.ALL]))):
-    [project, err] = projects_service.create_project(append_body(body, user))
+@router.post('/api/webinars')
+async def create_webinar(body: WebinarsModel, user: UserModel = Depends(auth_protecter([UserTypes.ALL]))):
+    [webinar, err] = webinars_service.create_webinar(append_body(body, user))
     if err:
         return throw_exception(err, status_code=HTTPStatus.UNPROCESSABLE_ENTITY)
-    return response_json(project.data[0], HTTPStatus.CREATED) if project else throw_exception(
+    return response_json(webinar.data[0], HTTPStatus.CREATED) if webinar else throw_exception(
         err,
         HTTPStatus.UNPROCESSABLE_ENTITY
     )
 
 
-@router.get('/api/projects')
-async def get_projects(req: Request, user: UserModel = Depends(auth_protecter())):
+@router.get('/api/webinars')
+async def get_webinars(req: Request, user: UserModel = Depends(auth_protecter())):
     try:
         pagination: PaginationModel = PaginationModel(
             page=int(req.query_params.get('page', 1)),
@@ -30,46 +30,46 @@ async def get_projects(req: Request, user: UserModel = Depends(auth_protecter())
             sort_order=req.query_params.get('sort_order', 'asc'),
             where=whereify(user)
         )
-        [projects, err] = projects_service.get_projects(pagination=pagination)
+        [webinars, err] = webinars_service.get_webinars(pagination=pagination)
     except ValidationError as e:
         return throw_exception(e, HTTPStatus.INTERNAL_SERVER_ERROR)
-    if projects:
-        return response_json(projects.data)
+    if webinars:
+        return response_json(webinars.data)
     else:
         return throw_exception(err if err else { "message": "Something went wrong!" }, HTTPStatus.INTERNAL_SERVER_ERROR)
 
 
-@router.get('/api/projects/{id}')
-async def get_project(id: str, user: UserModel = Depends(auth_protecter())):
+@router.get('/api/webinars/{id}')
+async def get_webinar(id: str, user: UserModel = Depends(auth_protecter())):
     id = get_id_param(id)
     if id is None or id < 0:
         return throw_exception({"message": "please provide the correct id"}, HTTPStatus.UNPROCESSABLE_ENTITY)
-    project = projects_service.get_project(id, where=whereify(user))
-    if project:
-        return response_json(project)
+    webinar = webinars_service.get_webinar(id, where=whereify(user))
+    if webinar:
+        return response_json(webinar)
     else:
-        return throw_exception({"message": "project not found"}, HTTPStatus.NOT_FOUND)
+        return throw_exception({"message": "webinar not found"}, HTTPStatus.NOT_FOUND)
 
-@router.put('/api/projects/{id}')
-async def update_project(id: str, project: ProjectsModel, user: UserModel = Depends(auth_protecter)):
+@router.put('/api/webinars/{id}')
+async def update_webinar(id: str, webinar: WebinarsModel, user: UserModel = Depends(auth_protecter)):
     id = get_id_param(id)
     if id is None or id < 0:
         return throw_exception({"message": "please provide the correct id"}, HTTPStatus.UNPROCESSABLE_ENTITY)
 
-    project.profile_id = user.profile_id
-    [updated_project, err] = projects_service.update_project(id=id, item=project)
-    if updated_project:
-        return response_json(updated_project)
+    webinar.profile_id = user.profile_id
+    [updated_webinar, err] = webinars_service.update_webinar(id=id, item=webinar)
+    if updated_webinar:
+        return response_json(updated_webinar)
     else:
         return throw_exception(err.json())
 
 
-@router.delete('/api/projects/{id}')
-async def delete_project(id: str, user: UserModel = Depends(auth_protecter)):
+@router.delete('/api/webinars/{id}')
+async def delete_webinar(id: str, user: UserModel = Depends(auth_protecter)):
     id = get_id_param(id)
     if id is None or id < 0:
         return throw_exception({"message": "please provide the correct id"}, HTTPStatus.UNPROCESSABLE_ENTITY)
-    [results, err] = projects_service.delete_project(id=id, where=whereify(user))
+    [results, err] = webinars_service.delete_webinar(id=id, where=whereify(user))
     if err:
         return throw_exception({"message": "failed to delete item"})
     else:

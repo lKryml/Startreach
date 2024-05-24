@@ -34,7 +34,7 @@ def get_profile(id: Union[PostgrestAPIResponse, None] = None):
     return GeneralService(table_name=table_name).find_by_id(id=id)
 
 def get_profiles(pagination: PaginationModel) -> Union[PostgrestAPIResponse | None, PostgrestAPIError | None]:
-    return GeneralService(table_name=table_name).find(pagination=pagination, model=ProfileModel, search_dict={})
+    return GeneralService(table_name=table_name).find(pagination=pagination, model=ProfileModel)
     
 
 

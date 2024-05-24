@@ -2,6 +2,7 @@ from http import HTTPStatus
 from pydantic import BaseModel
 from fastapi.responses import JSONResponse
 from utils.logger import logger
+from models import UserModel
 
 
 
@@ -38,3 +39,18 @@ return valid id or None
 def get_id_param(id):
     id = int(id) if str(id).isnumeric() else None
     return id
+
+
+def append_body(item: BaseModel | dict, user: UserModel):
+    if isinstance(item, dict):
+        item['user_id'] = user.id if "password" not in item else None
+        item['profile_id'] = user.profile_id
+    else:
+        item.user_id = user.id if not isinstance(item, UserModel) else None
+        item.profile_id = user.profile_id
+    return item
+
+def whereify(user: UserModel):
+    return {
+        "profile_id": user.profile_id,
+    }

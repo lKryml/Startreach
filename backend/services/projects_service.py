@@ -14,8 +14,7 @@ def project_exists(key: str = "email", value: str = None, id = None) -> bool:
     return True if len(project_count.data) != 0 else False
 
 
-def create_project(project: ProjectsModel):
-    
+def create_project(project: ProjectsModel):    
     project_json = project.model_dump(exclude=['createdAt', 'id'])
     project_json['launch_date'] = project.launch_date.date().isoformat()
     [project, err] = GeneralService(table_name=table_name).create(project_json)
@@ -23,9 +22,15 @@ def create_project(project: ProjectsModel):
         print("Error: From Project Service", err)
     return [project, err]
 
-def get_last_project_id():
+
+def get_last_project_id(where: dict[str, any]):
+    if where is None:
+        return [None, None]
     try:
-        project = supabase.table(table_name=table_name).select("id").order("id", desc=True).limit(1).execute()
+        query = supabase.table(table_name=table_name).select("id")
+        for key, value in where:
+            query = query.eq(key, value)
+        project = query.order("id", desc=True).limit(1).execute()
     except PostgrestAPIError as err:
         return [None, err.json()]
     if len(project.data) == 0:
@@ -33,31 +38,28 @@ def get_last_project_id():
     return [project.data[0]['id'], None]
     
 
-def get_project(id: Union[PostgrestAPIResponse, None] = None):
-    return GeneralService(table_name=table_name).find_by_id(id=id)
+def get_project(id: int, where):
+    where['id'] = id
+    return GeneralService(table_name=table_name).find_one(where=where)
 
-def get_projects(pagination: PaginationModel) -> Union[PostgrestAPIResponse | None, PostgrestAPIError | None]:
-    return GeneralService(table_name=table_name).find(pagination=pagination, model=ProjectsModel, search_dict={})
-    
+def get_projects(pagination: PaginationModel):
+    return GeneralService(table_name=table_name)\
+            .find(pagination=pagination, model=ProjectsModel)
 
 
-def update_project(id: str, item):
+def update_project(id: str, item, where: dict[str, any]):
+    if where is None:
+        return [None, None]
     try:
-        project = (
-            supabase.table(table_name=table_name)
-            .update(item)
-            .eq("id", id)
-            .execute()
-        )
+        project = GeneralService(table_name=table_name).update(where, item)
     except PostgrestAPIError as e:
         return[ None, e.json()]
     return [project, None]
 
-
-def delete_project(id: str) -> Union[PostgrestAPIResponse | None, PostgrestAPIError | None]:
+def delete_project(id: str, profile_id: int = None) -> Union[PostgrestAPIResponse | None, PostgrestAPIError | None]:
     try:
-        results = GeneralService(table_name=table_name).delete_by_id(id=id)
+        results = GeneralService(table_name=table_name, profile_id=profile_id).delete_by_id(id=id)
     except PostgrestAPIError as e:
         return[ None, e.json()]
-    return [results, None]        
+    return [results, None]
 
