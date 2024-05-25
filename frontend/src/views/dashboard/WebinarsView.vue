@@ -1,4 +1,4 @@
-<
+<?
 <script setup lang="ts">
 // import * as projectsService from "@/services/projects.service"
 // import type { IProjects } from "@/interfaces/project.interface"

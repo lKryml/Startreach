@@ -17,7 +17,8 @@
 				></MenuItemComponent>
 			</div>
 			<div class="flex justify-self-end items-center">
-				<img src="../../../assets/logo.png" class="w-9 h-auto max-h-9" />
+				<!-- <img src="../../../assets/logo.png" class="w-9 h-auto max-h-9" /> -->
+				<Logo />
 			</div>
 			<slot></slot>
 		</div>
@@ -29,6 +30,7 @@ import { useI18n } from "vue-i18n"
 import { defineProps } from "vue"
 import { type IMenuItem } from "@/interfaces/menu.interface"
 import Button from "@/shared/shadcn-ui/ui/button/Button.vue"
+import Logo from "@/components/svg/Logo.vue"
 
 const { t } = useI18n()
 const { items } = defineProps({
