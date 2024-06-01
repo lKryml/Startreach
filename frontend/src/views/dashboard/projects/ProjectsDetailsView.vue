@@ -36,9 +36,7 @@ watch(content, (src) => {
 let itemId: string | number
 let currentItem: IProjects = {
 	user_id: authStore.currentUser.id,
-	profile_id: authStore.currentUser.profile_id,
-	category_id: 1,
-	launch_date: new Date()
+	profile_id: authStore.currentUser.profile_id
 } as IProjects
 onBeforeMount(async () => {
 	itemId = defaultItemId || (route.params.itemId as string)

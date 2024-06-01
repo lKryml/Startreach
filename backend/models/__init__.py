@@ -7,3 +7,4 @@ from .profiles_model import ProfileModel, ProfileInfoModel
 from .categories_model import CategoriesModel
 from .projects_model import ProjectsModel
 from .webinars_model import WebinarsModel
+from .posts_model import PostsModel

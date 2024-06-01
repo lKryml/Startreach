@@ -37,8 +37,6 @@ let itemId: string | number
 let currentItem: IWebinars = {
 	user_id: authStore.currentUser.id,
 	profile_id: authStore.currentUser.profile_id,
-	category_id: 1,
-	start_date: new Date(),
 	attendees: 0,
 	tags: [] as string[],
 	description: "",

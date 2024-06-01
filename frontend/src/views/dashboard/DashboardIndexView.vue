@@ -61,6 +61,21 @@ const categories: DashboardCategories[] = [
 				path: "/dashboard/webinars/details"
 			}
 		]
+	},
+	{
+		title: "Posts",
+		links: [
+			{
+				icon: "FileIcon",
+				label: t("POSTS.SHOW"),
+				path: "/dashboard/posts"
+			},
+			{
+				icon: "PlusCircleIcon",
+				label: t("POSTS.ADD_NEW"),
+				path: "/dashboard/posts/details"
+			}
+		]
 	}
 ]
 const ontoggleSidebar = () => (isCollapsed.value ? onExpand() : onCollapse())
