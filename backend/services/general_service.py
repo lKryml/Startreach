@@ -1,10 +1,12 @@
+from fastapi import File, UploadFile
 from supabase.client import PostgrestAPIError
 from supabase import PostgrestAPIResponse
 from typing import Union, List
 from pydantic import BaseModel
 from models import PaginationModel
 from db import supabase
-
+from pathlib import Path
+import shutil
 class GeneralService():
     def __init__(self, table_name):
         self.table_name = table_name
@@ -44,7 +46,7 @@ class GeneralService():
         if where is None:
             return [None, None]
         query = supabase.from_(self.table_name).select('*')
-        for key, value in where:
+        for key, value in where.items():
             query = query.eq(key, value)
         try:
             data = query.limit(1).execute()
@@ -56,7 +58,7 @@ class GeneralService():
     def update(self, where: dict[str, any], item: BaseModel | dict):
         if where is None:
             return [None, None]
-        
+
         if isinstance(item, BaseModel):
             item = item.model_dump()
         
@@ -87,8 +89,19 @@ class GeneralService():
         return data
     
     
-    def upload_image(self):
-        pass
+    def upload_image(self, file: File, path: str|None = None):
+        try:
+            upload_dir = Path(path) if path else Path("uploads")
+            upload_dir.mkdir(exist_ok=True)
+            file_path = upload_dir / file.filename
+            print("Uploading image from upload dir: %s" % upload_dir)
+            print(file_path)
+            # Save the uploaded file
+            with file_path.open("wb") as buffer:
+                shutil.copyfileobj(file.file, buffer)
+        except Exception as e:
+            return [None, e]
+        return [{"filename": file.filename, "filepath": str(file_path)}, None]
 
     def __get_search_query(self,query, model):
         return query

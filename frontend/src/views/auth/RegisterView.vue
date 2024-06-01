@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import * as authService from "@/services/auth.service"
-import { onBeforeMount } from "vue"
+import { onBeforeMount, ref } from "vue"
 import { useRouter } from "vue-router"
+import { Loader2Icon } from "lucide-vue-next"
 import { Button, Input, Label } from "@/shared/shadcn-ui/ui"
 import { useAuthStore } from "@/stores/auth.store"
 import { useForm } from "vee-validate"
@@ -13,6 +14,7 @@ import { useToast } from "@/shared/shadcn-ui/ui/toast"
 const { t } = useI18n()
 const authStore = useAuthStore()
 const router = useRouter()
+const isLoadingData = ref(false)
 const authValidatorSchema = yup.object({
 	first_name: yup.string().required(),
 	last_name: yup.string().required(),
@@ -43,8 +45,10 @@ onBeforeMount(() => {
 })
 const getError = (field: string) => errors.value?.[field] as string
 const onSubmitForm = async (_values: any) => {
+	isLoadingData.value = true
 	const response = await authService.register(_values)
 	const data = response?.json ? await response.json() : undefined
+	isLoadingData.value = false
 	if (!response?.ok) {
 		return toast({
 			variant: "destructive",
@@ -143,8 +147,11 @@ const onSubmit = handleSubmit(onSubmitForm, onSubmitFormErrors)
 							required
 						/>
 					</div>
-					<Button type="submit" class="h-12 w-full">
-						{{ $t("AUTH.CREATE_NEW_ACCOUNT") }}
+					<Button class="h-12 w-full" type="submit" :disabled="isLoadingData">
+						<span class="w-full h-full m-0 p-0" v-if="!isLoadingData">{{
+							$t("AUTH.CREATE_NEW_ACCOUNT")
+						}}</span>
+						<Loader2Icon v-else class="w-8 h-8 me-2 animate-spin" />
 					</Button>
 					<!-- <Button variant="outline" class="h-12 w-full"> Signup with Google </Button> -->
 				</div>

@@ -1,26 +1,48 @@
 <script setup lang="ts">
 import { ref } from "vue"
+// import { PodcastIcon } from 'lucide-vue-next'
+import * as projectsService from "@/services/projects.service"
 import DashboardSidebar, {
-	type DashboardCategories,
-	type DashboardLinks
+	type DashboardCategories
 } from "@/components/layout/menu/dashboard/DashboardSidebar.vue"
 import DashboardMenu from "@/components/layout/menu/dashboard/DashboardMenu.vue"
-import { menu } from "@/constants/menu/public.menu"
-import { cn } from "@/libs/utils"
+import { useI18n } from "vue-i18n"
+import { onBeforeMount } from "vue"
+import type { IPagination, IProjects } from "@/interfaces"
 
+onBeforeMount(async () => {
+	const response = await projectsService.find({
+		page: 1,
+		per_page: 5
+	} as IPagination)
+	posts.value = response?.data || []
+})
+
+const { t } = useI18n()
+const posts = ref<IProjects[]>([])
 const isCollapsed = ref<boolean>(false)
 const categories: DashboardCategories[] = [
+	{
+		title: t("MENU.DASHBOARD"),
+		links: [
+			{
+				icon: "PieChartIcon",
+				label: t("DASHBOARD.SHOW_IT"),
+				path: "/dashboard"
+			}
+		]
+	},
 	{
 		title: "Projects",
 		links: [
 			{
 				icon: "ProjectorIcon",
-				label: "Show Projects",
+				label: t("PROJECTS.SHOW"),
 				path: "/dashboard/projects"
 			},
 			{
 				icon: "PlusCircleIcon",
-				label: "Add Project",
+				label: t("PROJECTS.ADD_NEW"),
 				path: "/dashboard/projects/details"
 			}
 		]
@@ -29,13 +51,13 @@ const categories: DashboardCategories[] = [
 		title: "Webinars",
 		links: [
 			{
-				icon: "ProjectorIcon",
-				label: "Show Webinars",
+				icon: "PodcastIcon",
+				label: t("WEBINARS.SHOW"),
 				path: "/dashboard/webinars"
 			},
 			{
 				icon: "PlusCircleIcon",
-				label: "Add Webinar",
+				label: t("WEBINARS.ADD_NEW"),
 				path: "/dashboard/webinars/details"
 			}
 		]
@@ -47,15 +69,17 @@ const onExpand = () => (isCollapsed.value = false)
 </script>
 <template>
 	<div
-		class="w-full h-dvh lg:grid lg:min-h-[600px] xl:min-h-[800px] lg:grid-cols-[300px_1fr] bg-dashboard text-dashboard-foreground"
+		class="w-full min-h-dvh lg:grid lg:grid-cols-[var(--sidebar-width)_1fr] bg-dashboard text-dashboard-foreground"
 	>
 		<DashboardSidebar
 			@ontoggle="ontoggleSidebar()"
 			:isCollapsed="isCollapsed"
-			:posts="['dsad', 'dsadasd ads', 'asdasd asd']"
+			:addPostsTitle="t('PROJECTS.ADD_NEW')"
+			:posts="posts.map((p) => p.name)"
 			:categories="categories"
+			:appName="t('APP.NAME')"
 		></DashboardSidebar>
-		<div class="flex justify-start flex-col items-center">
+		<div class="flex justify-start flex-col items-center min-h-dvh">
 			<DashboardMenu :items="[]"></DashboardMenu>
 			<router-view></router-view>
 		</div>

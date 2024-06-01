@@ -1,5 +1,6 @@
 from typing import List, Union, Annotated, Optional
 from pydantic import BaseModel, Field
+from .global_model import LocationModel
 
 
 class ProfileModel(BaseModel):
@@ -14,11 +15,8 @@ class ProfileModel(BaseModel):
     category_id: Annotated[int | None, Field(min=1)] = None
     user_id: Annotated[int, Field(min=0)]
 
-class Location(BaseModel):
-    lang: Annotated[int, Field(ge=0)]
-    lat: Annotated[int, Field(ge=0)]
 class ProfileInfoModel(BaseModel):
-    location: Location
+    location: LocationModel
     profile_id: Annotated[int, Field(min=1)]
     employees_count: Annotated[int | None, Field(min=1)] = None
     since: int

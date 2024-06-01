@@ -18,6 +18,19 @@ const dashboardRoutes = [
         name: 'dashboardProjectsDetailsEdit',
         // props: true,
         component: () => import('../views/dashboard/ProjectsDetailsView.vue')
+    }, {
+        path: 'webinars',
+        name: 'dashboardWebinars',
+        component: () => import('../views/dashboard/WebinarsView.vue')
+    }, {
+        path: 'webinars/details',
+        name: 'dashboardWebinarsDetails',
+        component: () => import('../views/dashboard/WebinarsDetailsView.vue')
+    }, {
+        path: 'webinars/details/:itemId',
+        name: 'dashboardWebinarsDetailsEdit',
+        // props: true,
+        component: () => import('../views/dashboard/WebinarsDetailsView.vue')
     }
 ]
 export default dashboardRoutes;

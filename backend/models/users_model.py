@@ -23,7 +23,7 @@ class UserModel(BaseModel):
     password: Annotated[str, Field(min_length=4)]
     user_type: Annotated[int, Field(min=0, max=10)] = 0 # if not set then the user should complete inserting information
     profile_id: Annotated[int | None, Field(ge=0)] = None
-    is_superuser: bool = False
+    is_superuser: Optional[bool | None] = False
     profile: Optional[ProfileModel | None] = None
 
 class UserAuthenticatedModel(UserModel):
