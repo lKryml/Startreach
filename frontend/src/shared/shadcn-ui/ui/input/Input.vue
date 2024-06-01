@@ -11,6 +11,7 @@ const props = defineProps<{
 
 const emits = defineEmits<{
 	(e: "update:modelValue", payload: string | number): void
+	(e: "onchange", payload: KeyboardEvent | Event): void
 }>()
 
 const modelValue = useVModel(props, "modelValue", emits, {
@@ -21,6 +22,7 @@ const modelValue = useVModel(props, "modelValue", emits, {
 
 <template>
 	<input
+		@change="($event) => emits('onchange', $event)"
 		v-model="modelValue"
 		:class="
 			cn(

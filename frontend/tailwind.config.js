@@ -29,7 +29,14 @@ module.exports = {
 				},
 				dashboard: {
 					DEFAULT: "var(--dashboard)",
-					foreground: "var(--dashboard-foreground)"
+					foreground: "var(--dashboard-foreground)",
+					"input-height": "var(--dashboard-input-height)",
+					"navbar-height": "var(--dashboard-navbar-height)"
+				},
+				sidebar: {
+					DEFAULT: "var(--sidebar)",
+					foreground: "var(--sidebar-foreground)",
+					border: "var(--sidebar-border"
 				},
 				"dashboard-navbar": {
 					DEFAULT: "var(--dashboard-navbar)",

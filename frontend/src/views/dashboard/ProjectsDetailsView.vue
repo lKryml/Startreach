@@ -1,22 +1,39 @@
 <script setup lang="ts">
 import * as yup from "yup"
 import * as projectsService from "@/services/projects.service"
+import { datePickerFormat } from "@/libs/date.utils"
+import { assignFileFromInput } from "@/libs/files.utis"
 import { useForm } from "vee-validate"
 
-import DatePicker from "@/components/ui/DatePicker.component.vue"
-import { useRouter } from "vue-router"
+import EditorComponent from "@/components/layout/editor/Editor.Component.vue"
+import PanelTitle from "@/components/layout/menu/PanelTitle.vue"
+import { Loader2Icon } from "lucide-vue-next"
+import { useRoute, useRouter } from "vue-router"
 import { useAuthStore } from "@/stores/auth.store"
 import { useToast } from "@/shared/shadcn-ui/ui/toast"
 import { useI18n } from "vue-i18n"
-import type { IProjects } from "@/interfaces/project.interface"
+import type { IProjects } from "@/interfaces/projects.interface"
 import type { IDetailsProps } from "@/interfaces/global.interface"
-import { onBeforeMount } from "vue"
-import { Textarea, Input, Switch, Button, Label } from "@/shared/shadcn-ui/ui"
+import { ref, onBeforeMount } from "vue"
+import { Input, Button, Label } from "@/shared/shadcn-ui/ui"
+import { watch } from "vue"
 
 const authStore = useAuthStore()
 const router = useRouter()
-const { itemId, defaultItem } = defineProps<IDetailsProps<IProjects>>()
+const route = useRoute()
+const { defaultItemId, defaultItem } = defineProps<IDetailsProps<IProjects>>()
+const emit = defineEmits<{
+	(e: "onCreateItem", item: IProjects): void
+	(e: "onEditItem", item: IProjects): void
+}>()
+const content = ref<string>()
+const isFormSubmitted = ref(false)
 
+watch(content, (src) => {
+	console.log(defaultItem)
+})
+
+let itemId: string | number
 let currentItem: IProjects = {
 	user_id: authStore.currentUser.id,
 	profile_id: authStore.currentUser.profile_id,
@@ -24,20 +41,25 @@ let currentItem: IProjects = {
 	launch_date: new Date()
 } as IProjects
 onBeforeMount(async () => {
-	if (itemId && !defaultItem?.id) {
-		const response: any = await projectsService
+	itemId = defaultItemId || (route.params.itemId as string)
+	if ((itemId || route.params.itemId) && !defaultItem?.id) {
+		const response = await projectsService
 			.findById(parseInt(itemId))
 			.catch((e) => console.log(e))
-		if (response?.ok) {
-			currentItem = response.json ? await response.json() : undefined
+		if (response?.data) {
+			currentItem = response?.data as IProjects
+			setValues(currentItem)
 		} else router.push(`/dashboard/projects`)
-	} else if (defaultItem?.id) currentItem = defaultItem || currentItem
+	} else if (defaultItem?.id) {
+		currentItem = defaultItem || currentItem
+		currentItem ? setValues(currentItem) : undefined
+	}
 })
 
 const authValidatorSchema = yup.object({
 	name: yup.string().min(2).required().default(currentItem?.name),
 	description: yup.string().min(2).required().default(currentItem?.description),
-	img: yup.string().min(2).optional().default(currentItem?.img),
+	img64: yup.string().min(2).optional().default(currentItem?.img64),
 	tags: yup.array().optional().default(currentItem?.tags),
 	employees_count: yup.number().optional().default(currentItem?.employees_count),
 	profile_id: yup
@@ -64,93 +86,133 @@ const { errors, defineField, handleSubmit, setValues, values } = useForm({
 })
 const [name, nameAttrs] = defineField("name")
 const [description, descriptionAttrs] = defineField("description")
+const [img64, img64Attrs] = defineField("img64")
 const [launchDate, launchDateAttrs] = defineField("launch_date")
 const [isLaunched, isLaunchedAttrs] = defineField("is_launched")
 const [category, categoryAttrs] = defineField("category_id")
-const [img, imgAttrs] = defineField("img")
 const [tags, tagsAttrs] = defineField("tags")
 const [needInvestores, needInvestoresAttrs] = defineField("need_investores")
 
 // const getError = (field: string) => (<any>errors?.value)?.[field]
 const onSubmitForm = async (_values: any) => {
-	const response = await projectsService.create(_values).catch((e) => {})
-	const item = (response?.json ? await response.json() : undefined)?.data
+	isFormSubmitted.value = true
+	const formData = new FormData()
+	for (const k in _values) {
+		formData.append(k, _values[k])
+	}
+	const response = await projectsService.create(formData as any).catch(() => {})
+	isFormSubmitted.value = false
+	const item = response?.data
 	if (!item) {
 		return toast({
-			title: 't("AUTH.FAILED_LOGIN")',
-			description: 't("AUTH.ENTER_DETAILS")'
+			variant: "destructive",
+			title: 't("GENERAL.ERROR")',
+			description: 't("GENERAL.EDIT_ITEM_GOES_WRONG")'
 		})
 	} else {
-		console.log(item)
+		if (!itemId) {
+			emit("onCreateItem", item)
+			itemId = item.id as IProjects["id"]
+		}
+		return toast({
+			variant: "destructive",
+			title: 't("GENERAL.SUCCESS")',
+			description: 't("GENERAL.SUCCESSFULLY_EDIT_ITEM")'
+		})
 	}
 }
+
 const onSubmitFormErrors = () => {
-	console.log("Error HAppend:", errors.value)
+	console.log("Error HAppend:", errors.value, values)
 }
 const onSubmit = handleSubmit(onSubmitForm, onSubmitFormErrors)
+const onFileChanged = async ($event: any) => {
+	assignFileFromInput({ $event, translator: t, signal: img64, toast, fileType: "image" })
+}
 </script>
 <template>
-	<form
-		:initial-values="currentItem"
-		@submit.prevent="onSubmit"
-		class="w-full h-dvh lg:grid lg:min-h-[600px] xl:min-h-[800px]"
-	>
-		<div class="flex items-start py-12">
-			<div
-				class="mx-auto grid lg:container lg:w-[800px] md:w-p[650px] sm:w-[450px] w-[350px] gap-6 py-8 rounded-md bg-background border-[1px] border-border"
-			>
-				<div class="grid gap-2 text-start">
-					<h1 class="text-3xl font-bold">{{ t(`PROJECTS.PAGE_TITLE`) }}</h1>
-					<p class="text-balance text-muted-foreground">
-						{{ t("PROJECTS.ENTER_DETAILS") }}
-					</p>
-				</div>
-				<div class="grid grid-col-2 grid-flow-row gap-10 p-5">
-					<div class="grid col-span-2 gap-2">
-						<Label for="name">{{ $t("PROJECTS.NAME") }}</Label>
-						<Input
-							class="h-12"
-							v-model="name"
-							v-bind="nameAttrs"
-							id="name"
-							type="name"
-							placeholder="m@example.com"
-							v-bind:class="{ 'border-destructive': !!errors.name }"
-						/>
+	<main class="container flex flex-col sm:gap-4 sm:py-4 sm:pe-14">
+		<form
+			:initial-values="currentItem"
+			@submit.prevent="onSubmit"
+			class="w-full min-h-full lg:grid"
+		>
+			<PanelTitle
+				v-bind:title="t('MENU.PROJECTS')"
+				:is-breadcrumb="true"
+				:breadcrumb-links="[
+					{ path: 'projects', label: t('PROJECTS.PAGE_TITLE') },
+					{ path: 'projects', label: t('PROJECTS.ADD_NEW') }
+				]"
+			></PanelTitle>
+			<div class="flex items-start py-10">
+				<div
+					class="mx-auto grid lg:container lg:w-[800px] md:w-p[650px] sm:w-[450px] w-[350px] gap-6 py-8 rounded-md bg-background border-[1px] border-border"
+				>
+					<div class="grid gap-2 text-start">
+						<h1 class="text-3xl font-bold">{{ t(`PROJECTS.ADD_TITLE`) }}</h1>
+						<p class="text-balance text-muted-foreground">
+							{{ t("PROJECTS.SUB_TITLE") }}
+						</p>
 					</div>
-					<!-- <div class="w-full">
-						<Switch id="is-launched" v-mode="isLaunched" v-bind="isLaunchedAttrs" />
-						<Label for="is-launched">{{ t("PROJECTS.IS_LAUNCHED") }}</Label>
-					</div> -->
-					<div class="grid gap-2">
-						<Label for="date" class="shrink-0">{{ t("PROJECTS.LAUNCHE_DATE") }} </Label>
-						<DatePicker
-							@ondatechanged="
-								(date) => {
-									setValues({ ...values, launch_date: date })
-								}
-							"
-							class="w-full h-12"
-						/>
+					<div class="grid grid-col-2 grid-flow-row gap-10 p-5">
+						<div class="grid col-span-2 gap-2">
+							<Label for="img64">{{ t("PROJECTS.IMAGE") }}</Label>
+							<Input
+								@onchange="($event) => onFileChanged($event)"
+								class="h-[var(--dashboard-input-height)]"
+								v-bind="img64Attrs"
+								id="img64"
+								type="file"
+								:placeholder="t('PROJECTS.UPLOAD_IMAGE_FOR_PROJECT_BG')"
+								v-bind:class="{ 'border-destructive': !!errors.name }"
+							/>
+						</div>
+						<div class="grid col-span-2 gap-2">
+							<Label for="name">{{ t("PROJECTS.NAME") }}</Label>
+							<Input
+								class="h-[var(--dashboard-input-height)]"
+								v-model="name"
+								v-bind="nameAttrs"
+								id="name"
+								type="name"
+								placeholder="m@example.com"
+								v-bind:class="{ 'border-destructive': !!errors.name }"
+							/>
+						</div>
+						<div class="grid gap-2">
+							<Label for="date" class="shrink-0"
+								>{{ t("PROJECTS.LAUNCHE_DATE") }}
+							</Label>
+							<VueDatePicker
+								:format="datePickerFormat"
+								v-model="launchDate"
+								@date-update="(date: Date) => setValues({ launch_date: date })"
+							/>
+						</div>
+						<div class="grid col-span-2 gap-2">
+							<Label for="description">{{ t("PROJECTS.DESCRIPTION") }}</Label>
+							<EditorComponent
+								@onchange="(content) => (description = content)"
+							></EditorComponent>
+						</div>
 					</div>
-					<div class="grid col-span-2 gap-2">
-						<Label for="description">{{ $t("PROJECTS.DESCRIPTION") }}</Label>
-						<Textarea
-							class="h-12"
-							v-model="description"
-							v-bind="descriptionAttrs"
-							id="description"
-							type="description"
-							placeholder="m@example.com"
-							v-bind:class="{ 'border-destructive': errors.description }"
-						></Textarea>
-					</div>
-				</div>
 
-				<Button type="submit" class="h-12 w-full">
-					{{ $t("AUTH.CREATE_NEW_ACCOUNT") }}
-				</Button>
+					<Button
+						type="submit"
+						class="h-[var(--dashboard-input-height)] w-full"
+						:disabled="isFormSubmitted"
+					>
+						<template v-if="!isFormSubmitted">{{
+							t("PROJECTS.CREATE_NEW_PROJECT")
+						}}</template>
+						<template v-else>
+							<Loader2Icon class="w-8 h-8 me-2 animate-spin" />
+							{{ t("GENERAL.WAIT_SUBMITTING_DATA") }}
+						</template>
+					</Button>
+				</div>
 			</div>
-		</div>
-	</form>
+		</form>
+	</main>
 </template>

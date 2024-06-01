@@ -1,23 +1,20 @@
-from utils.logger import logger
 from http import HTTPStatus
-from pydantic import ValidationError
-from models import AuthModel, UserModel, ProfileModel, ProfileInfoModel
-from services import auth_service, tokens_service
-from db import supabase
+from models import AuthModel, UserModel, ProfileModel
+from services import auth_service
 from fastapi import APIRouter, Request, Depends
 from utils.request_handler import throw_exception, response_json
 
 router = APIRouter()
 
 
-@router.post('/auth/login')
+@router.post('/api/auth/login')
 def login(auth : AuthModel):
     [user, err] = auth_service.login(auth)
     if err is not None:
         return throw_exception(err, status_code=HTTPStatus.UNPROCESSABLE_ENTITY)
     return response_json(user)
 
-@router.post('/auth/register')
+@router.post('/api/auth/register')
 def register(auth: AuthModel, req: Request):    
     [user, err] = auth_service.register(auth, req.body)
     if err is not None:
@@ -26,7 +23,7 @@ def register(auth: AuthModel, req: Request):
     print(user)
     return response_json(user)
 
-@router.post('/auth/register-completion/{user_id}')
+@router.post('/api/auth/register-completion/{user_id}')
 def register_complete(user_id: str, profile: ProfileModel):
     try:
         user_id = int(user_id)
@@ -39,12 +36,12 @@ def register_complete(user_id: str, profile: ProfileModel):
 
 
         
-@router.post('/auth/refresh_token')
+@router.post('/api/auth/refresh_token')
 def refresh_token(token: str):
     return response_json(token)
 
 
-@router.post('/auth/logout')
+@router.post('/api/auth/logout')
 def logout(user: UserModel = Depends(auth_service.auth_protecter)):
     if not user:
         return throw_exception({ "message": "Unauthorized!" }, status_code=HTTPStatus.UNAUTHORIZED)

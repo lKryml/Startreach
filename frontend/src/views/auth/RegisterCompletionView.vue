@@ -2,6 +2,8 @@
 import * as yup from "yup"
 import * as authService from "@/services/auth.service"
 import { useToast } from "@/shared/shadcn-ui/ui/"
+import { Loader2Icon } from "lucide-vue-next"
+import EditorComponent from "@/components/layout/editor/Editor.Component.vue"
 import ButtonBoxComponent from "@/shared/components/ButtonBoxComponent.vue"
 import StepperComponent from "@/shared/components/StepperComponent.vue"
 import { Input, Label, Textarea } from "@/shared/shadcn-ui/ui/"
@@ -11,18 +13,16 @@ import { useRouter } from "vue-router"
 import { useAuthStore } from "@/stores/auth.store"
 import { useForm } from "vee-validate"
 import { UsersTypesArray } from "@/constants/usersTypes.contant"
-import type { IProfile } from "@/interfaces/profile.interface"
+import type { IProfile } from "@/interfaces/profiles.interface"
 
-onBeforeMount(() => {
-	if (authStore.isAuth) router.push("/auth/login")
-})
+onBeforeMount(() => authStore.logout())
 
 const { t } = useI18n()
 const { toast } = useToast()
 const authStore = useAuthStore()
 const router = useRouter()
 const currentStep = ref(1)
-console.log(authStore.isAuth)
+const isLoadingData = ref(false)
 const authValidatorSchema = yup.object({
 	profile_type: yup.number().min(1).max(7).default(1).optional(),
 	name: yup.string().min(2).max(150).optional(),
@@ -48,8 +48,10 @@ const onSubmitForm = async (_values: IProfile | any) => {
 	if (!userId) return
 	_values.user_id = userId
 	_values.category_id = 1
+	isLoadingData.value = true
 	const response = await authService.registerCompletion(userId, _values as IProfile)
 	const data = response?.json ? await response.json() : undefined
+	isLoadingData.value = false
 	if (!response?.ok) {
 		return toast({
 			variant: "destructive",
@@ -83,6 +85,7 @@ const onSubmit = handleSubmit(onSubmitForm, onSubmitFormErrors)
 		<StepperComponent
 			:steps="['profileType', 'info', 'address']"
 			:default-step="currentStep"
+			:loading="isLoadingData"
 			@onnext="(step) => (currentStep = step)"
 			@onpreviuos="(step) => (currentStep = step)"
 			@onfinish="(step) => {}"
@@ -103,18 +106,18 @@ const onSubmit = handleSubmit(onSubmitForm, onSubmitFormErrors)
 			<div class="flex justify-center items-center px-4 py-12" v-show="currentStep === 2">
 				<div class="grid gap-4 grid-cols-2 w-full">
 					<div class="grid col-span-2 gap-2">
-						<Label for="name">{{ $t(`PROFILE.NAME_${profileType || 1}`) }}</Label>
+						<Label for="name">{{ t(`PROFILE.NAME_${profileType || 1}`) }}</Label>
 						<Input
 							v-model="name"
 							v-bind="nameAttrs"
 							id="name"
 							type="name"
-							:placeholder="$t(`PROFILE.NAME_${profileType || 1}`)"
+							:placeholder="t(`PROFILE.NAME_${profileType || 1}`)"
 							v-bind:class="{ 'border-destructive': getError('name') }"
 						/>
 					</div>
 					<div class="grid gap-2">
-						<Label for="phone">{{ $t("USERS.PHONE") }}</Label>
+						<Label for="phone">{{ t("USERS.PHONE") }}</Label>
 						<Input
 							v-model="phone"
 							v-bind="phoneAttrs"
@@ -125,7 +128,7 @@ const onSubmit = handleSubmit(onSubmitForm, onSubmitFormErrors)
 						/>
 					</div>
 					<div class="grid gap-2">
-						<Label for="email">{{ $t("USERS.EMAIL") }}</Label>
+						<Label for="email">{{ t("USERS.EMAIL") }}</Label>
 						<Input
 							v-model="email"
 							v-bind="emailAttrs"
@@ -136,7 +139,7 @@ const onSubmit = handleSubmit(onSubmitForm, onSubmitFormErrors)
 						/>
 					</div>
 					<div class="grid col-span-2 gap-2">
-						<Label for="address">{{ $t("USERS.ADDRESS") }}</Label>
+						<Label for="address">{{ t("USERS.ADDRESS") }}</Label>
 						<Input
 							v-model="address"
 							v-bind="addressAttrs"
@@ -151,17 +154,23 @@ const onSubmit = handleSubmit(onSubmitForm, onSubmitFormErrors)
 
 			<div class="flex justify-center items-center px-4 py-12" v-show="currentStep === 3">
 				<div class="grid gap-4 grid-cols-2 w-full">
-					<div class="grid col-span-2 gap-2">
-						<Label for="name">{{ $t(`PROFILE.NAME_${profileType || 1}`) }}</Label>
+					<!-- <div class="grid col-span-2 gap-2">
+						<Label for="name">{{ t(`PROFILE.NAME_${profileType || 1}`) }}</Label>
 						<Textarea
 							class="w-full h-36"
 							v-model="bio"
 							v-bind="bioAttrs"
 							id="bio"
 							type="bio"
-							:placeholder="$t(`PROFILE.BIO_${profileType || 1}`)"
+							:placeholder="t(`PROFILE.BIO_${profileType || 1}`)"
 							v-bind:class="{ 'border-destructive': getError('bio') }"
 						></Textarea>
+					</div> -->
+					<div class="grid col-span-2 gap-2">
+						<Label for="description">{{ t(`PROFILE.NAME_${profileType || 1}`) }}</Label>
+						<EditorComponent
+							@onchange="(content: any) => (bio = content)"
+						></EditorComponent>
 					</div>
 				</div>
 			</div>

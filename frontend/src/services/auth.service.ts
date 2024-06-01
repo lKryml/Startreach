@@ -1,5 +1,5 @@
 import { enviroment } from "@/enviroments/enviroment"
-import type { IProfile } from "@/interfaces/profile.interface";
+import type { IProfile } from "@/interfaces/profiles.interface";
 import type { IUsers } from "@/interfaces/users.interface"
 
 

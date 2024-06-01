@@ -1,7 +1,6 @@
 import datetime
-from typing import List, Union, Annotated, Optional
+from typing import List, Union, Any, Annotated, Optional
 from pydantic import BaseModel, Field
-
 
 class ProjectsModel(BaseModel):
     name: str
@@ -13,3 +12,5 @@ class ProjectsModel(BaseModel):
     createdAt: datetime.datetime | None = None
     launch_date: datetime.datetime | None = datetime.datetime.utcnow()
     need_investores: bool = True
+    is_active: bool = True
+    img: Annotated[str | None, Field(min_length=4)] = None

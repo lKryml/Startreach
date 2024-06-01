@@ -3,7 +3,7 @@
 		class="w-full flex justify-between bg-dashboard-navbar text-dashboard-navbar-foreground items-center"
 	>
 		<div
-			class="w-full px-5 border-b-[1px] border-b-border flex justify-start items-center h-[60px]"
+			class="w-full px-5 border-b-[1px] border-b-border flex justify-start items-center h-[var(--dashboard-navbar-height)]"
 		>
 			<div class="flex-1 flex justify-start items-center">
 				<MenuItemComponent

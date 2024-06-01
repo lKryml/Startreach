@@ -22,18 +22,27 @@
 		--font-weight: semibold;
 		--font-family: Tajawal, "IBM Plex Sans Arabic", sans-serif;
 
+		--sidebar-width: 250px;
+		--dashboard-width: calc(100% - var(--sidebar-width));
+
 		--background: hsl(0 0% 100%);
 		--foreground: hsl(240, 46%, 17%);
 
 		--navbar: white;
 		--navbar-foreground: var(--foreground);
 
+		--sidebar: #fff;
+		--sidebar-foreground: var(--foreground);
+		--sidebar-border: var(--border);
+
 		--dashboard: whitesmoke;
 		--dashboard-foreground: var(--foreground);
 
-		--dashboard-navbar: var(--secondary);
-		--dashboard-navbar-foreground: white;
-		--dashboard-navbar-border: var(--dashboard-navbar-foreground);
+		--dashboard-navbar: transparent;
+		--dashboard-navbar-foreground: var(--foreground);
+		--dashboard-navbar-border: var(--border);
+		--dashboard-navbar-height: 60px;
+		--dashboard-input-height: 2.5rem;
 
 		--root-navbar: var(--secondary);
 		--root-navbar-foreground: white;
@@ -48,16 +57,16 @@
 		--card: hsl(0, 0%, 100%);
 		--card-foreground: var(--foreground);
 
-		--border: #f1f1f1;
+		--border: #e3e3e3;
 		--input: var(--border);
 
-		--primary: hsl(177, 90%, 20%);
+		--primary: hsl(235.38deg 92.85% 55.94%);
 		--primary-foreground: #ffffff;
 
 		--secondary: hsl(229, 86%, 20%);
 		--secondary-foreground: #fff;
 
-		--accent: hsl(173, 69%, 90%);
+		--accent: hsl(224, 93%, 89%);
 		--accent-foreground: var(--foreground);
 
 		--destructive: hsl(0 84.2% 60.2%);
