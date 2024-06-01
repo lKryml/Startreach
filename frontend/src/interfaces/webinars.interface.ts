@@ -5,6 +5,7 @@ export interface IWebinars {
 	name: string
 	description: string
 	img: string
+	img64: string
 	tags: string[]
 	guests: string[]
 	profile_id: number
