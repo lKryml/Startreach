@@ -33,6 +33,7 @@ def initializeApp():
     app.include_router(contorllers.auth.router)
     app.include_router(contorllers.projects.router)
     app.include_router(contorllers.webinars.router)
+    app.include_router(contorllers.posts.router)
 
     initializeAppExceptions(app=app)
     initializeDocsGuards(app=app, username='admin', password='whatisthepassword?')

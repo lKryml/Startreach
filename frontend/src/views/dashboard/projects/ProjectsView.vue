@@ -24,7 +24,7 @@ import {
 	CardTitle
 } from "@/shared/shadcn-ui/ui/card"
 import { Dialog, DialogContent } from "@/shared/shadcn-ui/ui"
-import ProjectsDetailsView from "./ProjectsDetailsView.vue"
+import ProjectsDetailsView from "../projects/ProjectsDetailsView.vue"
 
 onBeforeMount(async () => await fetchData())
 const route = useRoute()
