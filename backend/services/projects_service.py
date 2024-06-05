@@ -17,11 +17,16 @@ def project_exists(key: str = "email", value: str = None, id = None) -> bool:
 
 
 def create_project(project: ProjectsModel):
-    file_path, error = process_image_data(project.img, table_name)
-    if error:
-        return None, error
+    if project.img64:
+        file_path, error = process_image_data(project.img64, project.img, table_name)
+        if error:
+            return None, error
+    print(file_path)
+    print(file_path)
+    print(file_path)
+    print(file_path)
     project.img = file_path
-    project_json = project.model_dump(exclude=['createdAt', 'id'])
+    project_json = project.model_dump(exclude=['createdAt', 'id', 'img64'])
     project_json['launch_date'] = project.launch_date.date().isoformat()
     project, err = GeneralService(table_name=table_name).create(project_json)
     if err is not None:

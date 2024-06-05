@@ -18,3 +18,7 @@ class AppConfigModel(BaseModel):
     jwt_refresh: int = 15
     jwt_secret: str = 'secret_key'
     jwt_algorithm: str = 'HS256'
+    
+    upload_path: str = 'uploads'
+    temp_path: str = 'uploads/temp'
+    images_path: str = 'uploads/images'

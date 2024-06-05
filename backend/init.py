@@ -27,7 +27,8 @@ def initializeApp():
 
 
 
-    app.mount("/assets", StaticFiles(directory="assets"), name="assets")
+    app.mount("/", StaticFiles(directory="assets"), name="assets")
+    app.mount("/images", StaticFiles(directory="uploads/images", check_dir=False), name="images")
     app.add_middleware(GZipMiddleware, minimum_size=1000)
     app.include_router(contorllers.users.router)
     app.include_router(contorllers.auth.router)

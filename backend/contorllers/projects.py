@@ -1,4 +1,5 @@
 from http import HTTPStatus
+from typing import Union
 from pydantic import ValidationError
 from models import ProjectsModel, PaginationModel, UserModel, UserTypes
 from services import projects_service
@@ -23,10 +24,6 @@ async def create_project(body: ProjectsModel, user: UserModel = Depends(auth_pro
 @router.get('/api/projects')
 async def get_projects(req: Request, user: UserModel = Depends(auth_protecter())):
     try:
-        print(req.query_params.get('per_page', '10'))
-        print(req.query_params.get('per_page', '10'))
-        print(req.query_params.get('per_page', '10'))
-        print(req.query_params.get('per_page', '10'))
         pagination: PaginationModel = PaginationModel(
             page=int(req.query_params.get('page', '1')),
             per_page=int(req.query_params.get('per_page', '10')),
@@ -38,7 +35,6 @@ async def get_projects(req: Request, user: UserModel = Depends(auth_protecter())
     except ValidationError as e:
         return throw_exception(e, HTTPStatus.INTERNAL_SERVER_ERROR)
     if projects:
-        print(projects)
         return response_json(projects.data)
     else:
         return throw_exception(err if err else { "message": "Something went wrong!" }, HTTPStatus.INTERNAL_SERVER_ERROR)
@@ -80,11 +76,15 @@ async def delete_project(id: str, user: UserModel = Depends(auth_protecter)):
     else:
         return response_json(results,statusCode=HTTPStatus.OK)
 
-@router.post('/api/projects/images/{id}')
-async def upload_image(file: UploadFile = File(), user: UserModel = Depends(auth_protecter)):
+@router.post('/api/projects/images')
+async def upload_image(file: Union[UploadFile, None] = None, user: UserModel = Depends(auth_protecter)):
+    print(file)
+    if not file:
+        return {"message": "No upload file sent"}
+    else:
+        return {"filename": file.filename}
     [image_files, err] = projects_service.upload_images(file)
     if image_files:
         return response_json(image_files)
     else:
         return throw_exception(err)
-    return image_files

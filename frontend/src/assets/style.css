@@ -16,8 +16,8 @@
 
 @layer base {
 	:root {
-		--direction: rtl;
-		--float: right;
+		--direction: ltr;
+		--float: left;
 		--font-size: 13px;
 		--font-weight: semibold;
 		--font-family: Tajawal, "IBM Plex Sans Arabic", sans-serif;

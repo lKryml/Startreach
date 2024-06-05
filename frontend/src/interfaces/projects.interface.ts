@@ -3,7 +3,7 @@ export interface IProjects {
     name: string,
     description: string,
     img: string,
-    img64: string,
+    img64: string | null,
     tags: string[],
     employees_count: number,
     profile_id: number,

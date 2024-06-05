@@ -6,6 +6,7 @@ from pydantic import BaseModel
 from models import PaginationModel
 from db import supabase
 from pathlib import Path
+from uuid import uuid4
 import shutil
 class GeneralService():
     def __init__(self, table_name):
@@ -91,9 +92,10 @@ class GeneralService():
     
     def upload_image(self, file: File, path: str|None = None):
         try:
-            upload_dir = Path(path) if path else Path("uploads")
+            upload_dir = Path(path) if path else Path("uploads/tmp")
             upload_dir.mkdir(exist_ok=True)
-            file_path = upload_dir / file.filename
+            random_filename = f"{uuid4()}{Path(file.filename).suffix}"
+            file_path = upload_dir / random_filename
             print("Uploading image from upload dir: %s" % upload_dir)
             print(file_path)
             # Save the uploaded file
