@@ -1,8 +1,10 @@
 <template>
-	<div class="flex w-full justify-center items-center">
+	<div class="container-lg">
+	<div class="flex w-full justify-center items-center align-self-end">
 		<MenuComponent :items="menu" />
 	</div>
 	<router-view />
+	</div>
 </template>
 
 <script setup lang="ts">

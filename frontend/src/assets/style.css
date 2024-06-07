@@ -112,6 +112,7 @@
 	* {
 		@apply border-border;
 	}
+
 	body {
 		@apply bg-background text-foreground;
 	}
@@ -122,6 +123,7 @@
 *:after {
 	direction: var(--direction) !important;
 }
+
 html,
 body {
 	direction: var(--direction) !important;

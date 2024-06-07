@@ -1,25 +1,23 @@
 <template>
-	<nav class="w-full flex justify-between bg-navbar left-0 t-0 items-center mb-0 fixed top-0">
+	<nav class="w-full flex justify-end bg-navbar left-0 t-0 mb-0 fixed top-0">
 		<div
-			class="w-full container flex justify-between items-center h-[70px] bg-transparent mb-4"
+			class="w-full flex justify-end items-center h-[70px] bg-transparent mb-4 ml-24"
 		>
-			<div class="text-foreground flex justify-center items-center">
-				<Button
-					class="rounded-full shadow-none w-48 h-10 bg-secondary text-secondary-foreground cursor-pointer"
-					>{{ t("GENERAL.CONTACT_US") }}</Button
-				>
+			<div class="btn-area ">
+				<a>Learn more</a>
 			</div>
-			<div class="flex-1 flex justify-center items-center">
-				<MenuItemComponent
-					:item="item"
-					v-for="item in items"
-					:key="item.id"
-				></MenuItemComponent>
+			
+			<div class="flex justify-end items-center border border-red-600 w-2/4 m-0">
+				<!-- <img src="../../../assets/logo.png" class="w-9 h-auto max-h-9" /> -->
+				<div class="flex justify-between  w-2/4 pl-16 gap-6">
+					<RouterLink to="/"> More </RouterLink>
+					<RouterLink to="/"> Projects </RouterLink>
+					<RouterLink to="/"> Investors </RouterLink>
+					<RouterLink to="/"> Startups </RouterLink>
+				</div>
+
+				<Logo />
 			</div>
-			<div class="flex justify-self-end items-center">
-				<img src="../../../assets/logo.png" class="w-9 h-auto max-h-9" />
-			</div>
-			<slot></slot>
 		</div>
 	</nav>
 </template>
@@ -29,6 +27,7 @@ import { useI18n } from "vue-i18n"
 import { defineProps } from "vue"
 import { type IMenuItem } from "@/interfaces/menu.interface"
 import Button from "@/shared/shadcn-ui/ui/button/Button.vue"
+import Logo from "@/components/svg/Logo.vue"
 
 const { t } = useI18n()
 const { items } = defineProps({

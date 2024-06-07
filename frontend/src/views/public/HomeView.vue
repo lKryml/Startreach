@@ -24,7 +24,7 @@
 					</div>
 				</div>
 				<div class="flex justify-center items-start pb-7 md:1/2 w-full">
-					<div class="self-end text-end">
+					<div class="self-end text-end">x
 						Empowering Entreprenuers to Connect Investors, Empowering Entreprenuers to
 						Connect InvestorsEmpowering Entreprenuers to Connect Investors
 					</div>
@@ -54,7 +54,7 @@
 		<div class="w-full flex flex-row gap-20 justify-around items-center h-[120px] bg-accent">
 			<div
 				v-for="(_, index) in partnersImagesPaths"
-				:key="index"
+				:key="index" 
 				class="w-24 max-h-20 justify-center items-center"
 			>
 				<img :src="_" />
