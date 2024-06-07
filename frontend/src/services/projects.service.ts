@@ -30,3 +30,7 @@ export const find = async (pagination: IPagination): Promise<IResponse<IProjects
 export const destroy = async (itemId: IProjects['id']) => (
     http.delete(_controller, itemId)
 );
+
+export const uploadImage = async (itemId: IProjects['id'] | null, formData: FormData) => {
+    return http.create(`${_controller}/images/${itemId || ''}`, formData);
+}

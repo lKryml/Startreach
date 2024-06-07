@@ -57,7 +57,8 @@ onBeforeMount(async () => {
 const authValidatorSchema = yup.object({
 	name: yup.string().min(2).required().default(currentItem?.name),
 	description: yup.string().min(2).required().default(currentItem?.description),
-	img64: yup.string().min(2).optional().default(currentItem?.img64),
+	img64: yup.string().optional().default(currentItem?.img64),
+	img: yup.string().min(2).optional().default(currentItem?.img),
 	tags: yup.array().optional().default(currentItem?.tags),
 	employees_count: yup.number().optional().default(currentItem?.employees_count),
 	profile_id: yup
@@ -85,6 +86,7 @@ const { errors, defineField, handleSubmit, setValues, values } = useForm({
 const [name, nameAttrs] = defineField("name")
 const [description, descriptionAttrs] = defineField("description")
 const [img64, img64Attrs] = defineField("img64")
+const [img, imgAttrs] = defineField("img")
 const [launchDate, launchDateAttrs] = defineField("launch_date")
 const [isLaunched, isLaunchedAttrs] = defineField("is_launched")
 const [category, categoryAttrs] = defineField("category_id")
@@ -94,11 +96,12 @@ const [needInvestores, needInvestoresAttrs] = defineField("need_investores")
 // const getError = (field: string) => (<any>errors?.value)?.[field]
 const onSubmitForm = async (_values: any) => {
 	isFormSubmitted.value = true
-	const formData = new FormData()
-	for (const k in _values) {
-		formData.append(k, _values[k])
-	}
-	const response = await projectsService.create(formData as any).catch(() => {})
+	// const formData = new FormData()
+	// for (const k in _values) {
+	// 	formData.append(k, _values[k])
+	// }
+	// const response = await projectsService.create(formData as any).catch(() => {})
+	const response = await projectsService.create(_values as any).catch(() => {})
 	isFormSubmitted.value = false
 	const item = response?.data
 	if (!item) {
@@ -125,7 +128,27 @@ const onSubmitFormErrors = () => {
 }
 const onSubmit = handleSubmit(onSubmitForm, onSubmitFormErrors)
 const onFileChanged = async ($event: any) => {
-	assignFileFromInput({ $event, translator: t, signal: img64, toast, fileType: "image" })
+	// const target = $event.target as HTMLInputElement
+	// if (target.files && target.files[0]) {
+	// 	const formData = new FormData()
+	// 	formData.append("file", target.files[0])
+	// 	try {
+	// 		const response = await projectsService.uploadImage(null, formData)
+	// 		if (!response)
+	// 			return toast({
+	// 				variant: "destructive",
+	// 				title: t("GENERAL.ERROR"),
+	// 				description: t("GENERAL.UPLOAD_IMAGE_GOES_WRONG")
+	// 			})
+	// 		console.log(response.data)
+	// 	} catch (error) {
+	// 		console.error(error)
+	// 	}
+	// }
+	assignFileFromInput({ $event, translator: t, signal: img64, toast, fileType: "image" }, () => {
+		const splitter = $event.target.files?.[0]?.name.split(".")
+		img.value = `${$event?.files?.[0]?.size}-${splitter[splitter.length - 1]}`
+	})
 }
 </script>
 <template>

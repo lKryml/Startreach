@@ -14,3 +14,5 @@ class ProjectsModel(BaseModel):
     need_investores: bool = True
     is_active: bool = True
     img: Annotated[str | None, Field(min_length=4)] = None
+    img64: Any | None = None
+    # img64: Annotated[str | None, Field(min_length=4)] = None
