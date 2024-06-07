@@ -9,17 +9,18 @@ export const useAuthStore = defineStore('auth', () => {
     const userType = ref<number>();
     const login = (user: IUsers) => {
         currentUser.value = user;
-        console.log(user, currentUser.value)
         if (user?.access_token) {
             isAuth.value = !!user.profile_id;
             localStorage.setItem('currentUser', JSON.stringify(user));
+            localStorage.setItem('access_token', user.access_token);
         } else {
             logout();
         }
     }
     const logout = () => {
-        // isAuth.value = !!0;
-        // localStorage.removeItem('currentUser');
+        isAuth.value = !!0;
+        localStorage.removeItem('currentUser');
+        localStorage.removeItem('access_token');
     }
 
     return { isAuth, userType, currentUser, login, logout };

@@ -4,7 +4,7 @@
 
 <script lang="ts" setup>
 import * as icons from "lucide-vue-next"
-import { ref, computed, defineProps } from "vue"
+import { computed, defineProps } from "vue"
 
 const { name } = defineProps({
 	name: {
@@ -15,5 +15,4 @@ const { name } = defineProps({
 })
 
 const icon = computed(() => (icons as any)[name])
-console.log(icon, name)
 </script>

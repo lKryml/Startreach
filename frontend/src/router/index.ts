@@ -52,13 +52,14 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
+	// console.log(to, from)
 	if (!to.matched.some(record => record.meta.requiresAuth)) next();
 	// ----------------------------------------------------------------
 	const currentUser: IUsers = JSON.parse(localStorage.getItem('currentUser') || '{}')
 	if (!currentUser?.access_token)
-		return next({ name: 'authroot' });
+		return next({ name: 'login' });
 	if (to.matched.some(record => record.meta.isSuperUSer) && !currentUser.is_root)
-		return next({ name: 'authroot' });
+		return next({ name: 'login' });
 	next();
 });
 

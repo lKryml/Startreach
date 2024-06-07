@@ -1,20 +1,19 @@
 import contorllers
-from fastapi import FastAPI, Request
+from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.gzip import GZipMiddleware
 from fastapi.middleware.cors import CORSMiddleware
-from supabase import PostgrestAPIError
-from pydantic import ValidationError
-from utils.request_handler import throw_exception
-from utils.logger import logger
-
+from utils.exceptions import initializeAppExceptions
+from utils.docs_security import initializeDocsGuards
 
 def initializeApp():
-    app = FastAPI()
+    app = FastAPI(
+        # docs_url=None, redoc_url=None, openapi_url=None
+    )
     origins = [
         "http://localhost",
         "http://localhost:8080",
-        "https://yourdomain.com"
+        "https://boostsomethin.ly"
     ]
 
     # Add CORSMiddleware to the app
@@ -34,28 +33,32 @@ def initializeApp():
     app.include_router(contorllers.auth.router)
     app.include_router(contorllers.projects.router)
     app.include_router(contorllers.webinars.router)
+    app.include_router(contorllers.posts.router)
+
+    initializeAppExceptions(app=app)
+    initializeDocsGuards(app=app, username='admin', password='whatisthepassword?')
 
 
     @app.get('/health')
     def health():
         return { "status": "OK" }
 
-    @app.exception_handler(ValidationError)
-    async def catch_validation_exceptions_middleware(request, exc: ValidationError):
-        return throw_exception(exc)
+    # @app.exception_handler(ValidationError)
+    # async def catch_validation_exceptions_middleware(request, exc: ValidationError):
+    #     return throw_exception(exc)
     
     
-    @app.exception_handler(PostgrestAPIError)
-    async def catch_supabase_exceptions_middleware(request, exc: PostgrestAPIError):
-        return throw_exception(exc.json())
+    # @app.exception_handler(PostgrestAPIError)
+    # async def catch_supabase_exceptions_middleware(request, exc: PostgrestAPIError):
+    #     return throw_exception(exc.json())
 
-    async def catch_exceptions_middleware(request: Request, call_next):
-        try:
-            return await call_next(request)
-        except Exception as e:
-            # you probably want some kind of logging here
-            logger.error("From CatchException")
-            logger.error(e)
-            return throw_exception({ "message": "something went wrong" })
-    app.middleware('http')(catch_exceptions_middleware)
+    # async def catch_exceptions_middleware(request: Request, call_next):
+    #     try:
+    #         return await call_next(request)
+    #     except Exception as e:
+    #         # you probably want some kind of logging here
+    #         logger.error("From CatchException")
+    #         logger.error(e)
+    #         return throw_exception({ "message": "something went wrong" })
+    # app.middleware('http')(catch_exceptions_middleware)
     return app

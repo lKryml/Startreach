@@ -22,6 +22,10 @@ def login(credentials: AuthModel):
     user_data = supabase.table(table_name=table_name).select('*, profiles(*)').eq('email', credentials.email).limit(1).execute()
     if 0 == user_data.data.count or user_data.data[0]['password'] != hash_pass(credentials.password):
         return [None, PostgrestAPIError({"message": "user not found"}).json()]
+    print(user_data)
+    print(user_data)
+    print(user_data)
+    print(user_data)
     user_dict = user_data.data[0]
     user_id = user_dict['id']
     del user_dict['id']
@@ -87,13 +91,13 @@ def hash_pass(password: str):
 def auth_protecter(roles: list[int] | None = None, is_superuser=False):
     async def protector(req: Request):
         # DELETE ON PRODUCTION MODE
-        if app_config.get('enviroment') == 'development':
-            logger.error("DELETE ON PRODUCTION MODE auth_service.auth_protecter line:91")
-            logger.error("DELETE ON PRODUCTION MODE auth_service.auth_protecter line:91")
-            logger.error("DELETE ON PRODUCTION MODE auth_service.auth_protecter line:91")
-            user = supabase.table(table_name=table_name).select('*').eq('id', 130).limit(1).execute()
-            if len(user.data) == 1:
-                return UserModel(**user.data[0])
+        # if app_config.get('enviroment') == 'development':
+        #     logger.error("DELETE ON PRODUCTION MODE auth_service.auth_protecter line:91")
+        #     logger.error("DELETE ON PRODUCTION MODE auth_service.auth_protecter line:91")
+        #     logger.error("DELETE ON PRODUCTION MODE auth_service.auth_protecter line:91")
+        #     user = supabase.table(table_name=table_name).select('*').eq('id', 130).limit(1).execute()
+        #     if len(user.data) == 1:
+        #         return UserModel(**user.data[0])
 
         jwt_encoded = req.headers.get('Authorization')
         try:

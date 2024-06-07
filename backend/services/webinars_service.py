@@ -16,7 +16,8 @@ def webinar_exists(key: str = "email", value: str = None, id = None) -> bool:
 
 def create_webinar(webinar: WebinarsModel):    
     webinar_json = webinar.model_dump(exclude=['createdAt', 'id'])
-    webinar_json['launch_date'] = webinar.launch_date.date().isoformat()
+    webinar_json['start_date'] = webinar.start_date.date().isoformat()
+    webinar_json['end_date'] = webinar.end_date.date().isoformat()
     [webinar, err] = GeneralService(table_name=table_name).create(webinar_json)
     if err is not None:
         print("Error: From Webinar Service", err)

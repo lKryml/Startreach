@@ -45,7 +45,7 @@ async def get_webinar(id: str, user: UserModel = Depends(auth_protecter())):
     if id is None or id < 0:
         return throw_exception({"message": "please provide the correct id"}, HTTPStatus.UNPROCESSABLE_ENTITY)
     webinar = webinars_service.get_webinar(id, where=whereify(user))
-    if webinar:
+    if len(webinar.data) > 0:
         return response_json(webinar)
     else:
         return throw_exception({"message": "webinar not found"}, HTTPStatus.NOT_FOUND)
