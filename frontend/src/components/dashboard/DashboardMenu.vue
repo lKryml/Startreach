@@ -18,7 +18,7 @@
 	</nav>
 </template>
 <script setup lang="ts">
-import MenuItemComponent from "../MenuItem.component.vue"
+import MenuItemComponent from "../menu/MenuItem.component.vue"
 import DashboardAccount from "./DashboardAccount.vue"
 import { defineProps } from "vue"
 import { type IMenuItem } from "@/_interfaces/menu.interface"

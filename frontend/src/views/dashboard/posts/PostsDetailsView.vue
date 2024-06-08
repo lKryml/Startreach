@@ -4,7 +4,7 @@ import * as postsService from "@/_services/posts.service"
 import { assignFileFromInput } from "@/_libs/files.utis"
 import { useForm } from "vee-validate"
 
-import EditorComponent from "@/components/layout/editor/Editor.Component.vue"
+import EditorComponent from "@/components/Editor.Component.vue"
 import PanelTitle from "@/components/layout/menu/PanelTitle.vue"
 import { Loader2Icon } from "lucide-vue-next"
 import { useRoute, useRouter } from "vue-router"

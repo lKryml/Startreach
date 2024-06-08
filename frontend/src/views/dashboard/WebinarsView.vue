@@ -1,5 +1,6 @@
+<
 <script setup lang="ts">
-// import * as projectsService from "@/services/projects.service"
+import * from "@/_services/projects.service"
 // import type { IProjects } from "@/interfaces/project.interface"
 import ItemCard from "@/components/ui/ItemCard.vue"
 import {
@@ -17,7 +18,7 @@ import {
 	DropdownMenuTrigger,
 	DropdownMenuSeparator
 } from "@/shared/shadcn-ui/ui"
-import PanelTitle from "@/components/layout/menu/PanelTitle.vue"
+import PanelTitle from "@/components/menu/PanelTitle.vue"
 import { useI18n } from "vue-i18n"
 import { DotsHorizontalIcon } from "@radix-icons/vue"
 import { onBeforeMount } from "vue"

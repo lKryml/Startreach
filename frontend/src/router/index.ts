@@ -3,6 +3,7 @@ import publicRoutes from "./public.routes"
 import rootRoutes from "./root.routes"
 import authRoutes from "./auth.routes"
 import dashboardRoutes from "./dashboard.routes"
+
 import type { IUsers } from "@/_interfaces/users.interface"
 
 const routes = [
@@ -24,6 +25,11 @@ const routes = [
 		meta: {
 			requiresAuth: true
 		}
+	},
+	{
+		path: "/projects",
+		name: "projects",
+		component: import("../views/ProjectsView.vue")
 	},
 	{
 		path: "/r00t",

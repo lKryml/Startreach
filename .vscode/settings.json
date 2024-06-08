@@ -39,9 +39,16 @@
           "poetry.lock",
           "README.md",
           ".example.env",
-          ".example.env"
+          ".example.env",
+          "frontend/src/views/root/",
+          "frontend/src/App.vue",
+          "frontend/src/main.ts"
         ],
-        "peek": ["frontend/public/"]
+        "peek": [
+          "frontend/public/",
+          "frontend/tailwind.config.js",
+          "frontend/tsconfig.app.json"
+        ]
       },
       {
         "name": "Strict",
@@ -63,8 +70,6 @@
     "frontend/package.json": true,
     "frontend/postcss.config.js": true,
     "frontend/README.md": true,
-    "frontend/tailwind.config.js": true,
-    "frontend/tsconfig.app.json": true,
     "frontend/tsconfig.json": true,
     "frontend/tsconfig.node.json": true,
     "frontend/tsconfig.vitest.json": true,
@@ -84,7 +89,10 @@
     "Makefile": true,
     "pyproject.toml": true,
     "poetry.lock": true,
-    "README.md": true
+    "README.md": true,
+    "frontend/src/views/root/": true,
+    "frontend/src/App.vue": true,
+    "frontend/src/main.ts": true
   },
   "hidefiles.selectedProfile": "Default"
 }

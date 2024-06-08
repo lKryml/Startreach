@@ -4,8 +4,8 @@ import { ref } from "vue"
 import * as projectsService from "@/_services/projects.service"
 import DashboardSidebar, {
 	type DashboardCategories
-} from "@/components/layout/menu/dashboard/DashboardSidebar.vue"
-import DashboardMenu from "@/components/layout/menu/dashboard/DashboardMenu.vue"
+} from "@/components/dashboard/DashboardSidebar.vue"
+import DashboardMenu from "@/components/dashboard/DashboardMenu.vue"
 import { useI18n } from "vue-i18n"
 import { onBeforeMount } from "vue"
 import type { IPagination, IProjects } from "@/_interfaces"

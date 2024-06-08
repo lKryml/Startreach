@@ -11,7 +11,7 @@ import {
 	DropdownMenuTrigger
 } from "@/shared/shadcn-ui/ui/dropdown-menu"
 import { EyeIcon, EyeOff, File, ListFilter, PlusCircle } from "lucide-vue-next"
-import { type ItemsToShowProps } from "@/components/layout/table/ActionTable.Component.vue"
+import { type ItemsToShowProps } from "@/components/layout/ActionTable.Component.vue"
 interface TabsLinks {
 	name: string
 	path?: string
