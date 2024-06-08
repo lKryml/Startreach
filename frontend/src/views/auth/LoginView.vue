@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import * as authService from "@/services/auth.service"
+import * as authService from "@/_services/auth.service"
 import { onBeforeMount, ref } from "vue"
 import { useRouter } from "vue-router"
 import { Loader2Icon } from "lucide-vue-next"

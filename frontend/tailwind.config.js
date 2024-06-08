@@ -52,6 +52,9 @@ module.exports = {
 				input: "var(--input)",
 				ring: "var(--ring)",
 				background: "var(--background)",
+				backgroundImage: {
+					hero: "url('/images/hero-pattern.png')"
+				},
 				foreground: "var(--foreground)",
 				primary: {
 					DEFAULT: "var(--primary)",

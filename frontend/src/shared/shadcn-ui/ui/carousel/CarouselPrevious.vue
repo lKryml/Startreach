@@ -2,7 +2,7 @@
 import { ArrowLeftIcon } from "@radix-icons/vue"
 import { useCarousel } from "./useCarousel"
 import type { WithClassAsProps } from "./interface"
-import { cn } from "@/libs/utils"
+import { cn } from "@/_libs/utils"
 import { Button } from "@/shared/shadcn-ui/ui/button"
 
 const props = defineProps<WithClassAsProps>()

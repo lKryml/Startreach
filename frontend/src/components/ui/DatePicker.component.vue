@@ -6,7 +6,7 @@ import { Calendar as CalendarIcon } from "lucide-vue-next"
 import { Calendar } from "@/shared/shadcn-ui/ui/calendar"
 import { Button } from "@/shared/shadcn-ui/ui/button"
 import { Popover, PopoverContent, PopoverTrigger } from "@/shared/shadcn-ui/ui/popover"
-import { cn } from "@/libs/utils"
+import { cn } from "@/_libs/utils"
 
 const props = defineProps<{ class: string; defaultValue?: DateValue | Date }>()
 const df = new DateFormatter("en-US", {

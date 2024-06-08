@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { cn } from "@/libs/utils"
+import { cn } from "@/_libs/utils"
 import { defineProps } from "vue"
 import { Card, CardContent, CardHeader, Button } from "@/shared/shadcn-ui/ui"
 

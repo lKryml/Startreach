@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import * as yup from "yup"
-import * as authService from "@/services/auth.service"
+import * as authService from "@/_services/auth.service"
 import { useToast } from "@/shared/shadcn-ui/ui/"
 import { Loader2Icon } from "lucide-vue-next"
-import EditorComponent from "@/components/layout/editor/Editor.Component.vue"
+import EditorComponent from "@/components/Editor.Component.vue"
 import ButtonBoxComponent from "@/shared/components/ButtonBoxComponent.vue"
 import StepperComponent from "@/shared/components/StepperComponent.vue"
 import { Input, Label, Textarea } from "@/shared/shadcn-ui/ui/"
@@ -13,7 +13,7 @@ import { useRouter } from "vue-router"
 import { useAuthStore } from "@/stores/auth.store"
 import { useForm } from "vee-validate"
 import { UsersTypesArray } from "@/constants/usersTypes.contant"
-import type { IProfile } from "@/interfaces/profiles.interface"
+import type { IProfile } from "@/_interfaces/profiles.interface"
 
 onBeforeMount(() => authStore.logout())
 
