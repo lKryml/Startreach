@@ -7,7 +7,7 @@ import {
 	DropdownMenuPortal,
 	useForwardPropsEmits
 } from "radix-vue"
-import { cn } from "@/libs/utils"
+import { cn } from "@/_libs/utils"
 
 const props = withDefaults(
 	defineProps<DropdownMenuContentProps & { class?: HTMLAttributes["class"] }>(),

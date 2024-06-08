@@ -28,7 +28,7 @@
 	</div>
 </template>
 <script setup lang="ts">
-import { type IMenuItem } from "@/interfaces/menu.interface"
+import { type IMenuItem } from "@/_interfaces/menu.interface"
 import { Separator } from "@/shared/shadcn-ui/ui/separator"
 import { defineProps } from "vue"
 import { useI18n } from "vue-i18n"

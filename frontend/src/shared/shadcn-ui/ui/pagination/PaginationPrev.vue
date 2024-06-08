@@ -3,7 +3,7 @@ import { type HTMLAttributes, computed } from "vue"
 import { PaginationPrev, type PaginationPrevProps } from "radix-vue"
 import { ChevronLeftIcon } from "@radix-icons/vue"
 import { Button } from "@/shared/shadcn-ui/ui/button"
-import { cn } from "@/libs/utils"
+import { cn } from "@/_libs/utils"
 
 const props = withDefaults(
 	defineProps<PaginationPrevProps & { class?: HTMLAttributes["class"] }>(),

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { defineEmits } from "vue"
-import { cn } from "@/libs/utils"
+import { cn } from "@/_libs/utils"
 import Icon from "@/shared/components/Icon.vue"
 import { ScrollArea, Button } from "@/shared/shadcn-ui/ui"
 import { PanelRightOpenIcon, SendIcon } from "lucide-vue-next"

@@ -7,7 +7,7 @@ import {
 	useForwardPropsEmits
 } from "radix-vue"
 import { GripVertical } from "lucide-vue-next"
-import { cn } from "@/libs/utils"
+import { cn } from "@/_libs/utils"
 
 const props = defineProps<
 	SplitterResizeHandleProps & { class?: HTMLAttributes["class"]; withHandle?: boolean }

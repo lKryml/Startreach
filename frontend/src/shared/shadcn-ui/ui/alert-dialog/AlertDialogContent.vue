@@ -8,7 +8,7 @@ import {
 	AlertDialogPortal,
 	useForwardPropsEmits
 } from "radix-vue"
-import { cn } from "@/libs/utils"
+import { cn } from "@/_libs/utils"
 
 const props = defineProps<AlertDialogContentProps & { class?: HTMLAttributes["class"] }>()
 const emits = defineEmits<AlertDialogContentEmits>()

@@ -25,7 +25,7 @@
 import MenuItemComponent from "./MenuItem.component.vue"
 import { useI18n } from "vue-i18n"
 import { defineProps } from "vue"
-import { type IMenuItem } from "@/interfaces/menu.interface"
+import { type IMenuItem } from "@/_interfaces/menu.interface"
 import Button from "@/shared/shadcn-ui/ui/button/Button.vue"
 import Logo from "@/components/svg/Logo.vue"
 

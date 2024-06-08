@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { type HTMLAttributes, computed } from "vue"
 import { RangeCalendarHeadCell, type RangeCalendarHeadCellProps, useForwardProps } from "radix-vue"
-import { cn } from "@/libs/utils"
+import { cn } from "@/_libs/utils"
 
 const props = defineProps<RangeCalendarHeadCellProps & { class?: HTMLAttributes["class"] }>()
 

@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import * as postsService from "@/services/posts.service"
-import { usePagination } from "@/libs/usePagination"
+import * as postsService from "@/_services/posts.service"
+import { usePagination } from "@/_libs/usePagination"
 import { useRouter, useRoute } from "vue-router"
-import type { IPosts, IResponse } from "@/interfaces"
+import type { IPosts, IResponse } from "@/_interfaces"
 // import ItemCard from "@/components/ui/ItemCard.vue"
 import PanelTitle from "@/components/layout/menu/PanelTitle.vue"
 import FilterComponent from "@/components/layout/filter/Filter.Component.vue"

@@ -21,7 +21,7 @@ import PanelTitle from "@/components/layout/menu/PanelTitle.vue"
 import { useI18n } from "vue-i18n"
 import { DotsHorizontalIcon } from "@radix-icons/vue"
 import { onBeforeMount } from "vue"
-import type { IPagination } from "@/interfaces/global.interface"
+import type { IPagination } from "@/_interfaces/global.interface"
 import { ref } from "vue"
 
 const { t } = useI18n()

@@ -3,7 +3,7 @@ import { type HTMLAttributes, computed } from "vue"
 import { PaginationLast, type PaginationLastProps } from "radix-vue"
 import { DoubleArrowRightIcon } from "@radix-icons/vue"
 import { Button } from "@/shared/shadcn-ui/ui/button"
-import { cn } from "@/libs/utils"
+import { cn } from "@/_libs/utils"
 
 const props = withDefaults(
 	defineProps<PaginationLastProps & { class?: HTMLAttributes["class"] }>(),

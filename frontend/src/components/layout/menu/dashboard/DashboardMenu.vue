@@ -21,7 +21,7 @@
 import MenuItemComponent from "../MenuItem.component.vue"
 import DashboardAccount from "./DashboardAccount.vue"
 import { defineProps } from "vue"
-import { type IMenuItem } from "@/interfaces/menu.interface"
+import { type IMenuItem } from "@/_interfaces/menu.interface"
 // import { useI18n } from "vue-i18n"
 
 // const { t } = useI18n()

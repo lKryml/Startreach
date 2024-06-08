@@ -19,7 +19,7 @@ import {
 	CalendarNextButton,
 	CalendarPrevButton
 } from "."
-import { cn } from "@/libs/utils"
+import { cn } from "@/_libs/utils"
 
 const props = defineProps<CalendarRootProps & { class?: HTMLAttributes["class"] }>()
 
