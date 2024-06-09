@@ -9,7 +9,7 @@ import {
 	CardTitle
 } from "@/shared/shadcn-ui/ui/card"
 import { useI18n } from "vue-i18n"
-import PanelTitle from "@/components/layout/menu/PanelTitle.vue"
+import PanelTitle from "@/components/menu/PanelTitle.vue"
 
 const { t } = useI18n()
 </script>
