@@ -1,5 +1,5 @@
 <template>
-	<nav class="w-full flex justify-start bg-transparent left-0 t-0 mb-0 fixed top-0 border-b-2 border-gray-200 border-opacity-20 border-transparent backdrop-blur-xl ">
+	<nav class="w-full flex justify-start bg-transparent left-0 t-0 mb-0 fixed top-0 border-b-2 border-gray-200 border-opacity-20  backdrop-blur-md ">
 		<div
 			class="w-full flex justify-start items-center h-[50px] bg-transparent mb-4 ml-24 mt-4 "
 		>
