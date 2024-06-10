@@ -159,27 +159,14 @@ import { useI18n } from "vue-i18n"
 import { onBeforeMount } from "vue"
 import { ref } from "vue"
 import { useToast } from "@/shared/shadcn-ui/ui"
-import {
-	Card,
-	CardContent,
-	CardDescription,
-	CardFooter,
-	CardHeader,
-	CardTitle
-} from "@/shared/shadcn-ui/ui/card"
-import { Dialog, DialogContent } from "@/shared/shadcn-ui/ui"
-import ProjectsDetailsView from "../projects/ProjectsDetailsView.vue"
+
 
 onBeforeMount(async () => await fetchData())
 const route = useRoute()
-const router = useRouter()
-const { toast } = useToast()
+
 const { pagination } = usePagination(route)
-const { t } = useI18n()
 const isLoadingList = ref(false)
-const isShowDetailsDialog = ref(false)
-const cachedItem = ref<IProjects | any>(null)
-const isConfirmDeleteDialogOpen = ref(false)
+
 const projects = ref<IProjects[]>([])
 const fetchData = async (page?: number) => {
 	isLoadingList.value = true
@@ -197,61 +184,6 @@ const fetchData = async (page?: number) => {
 	}
 }
 
-const onCreateItem = (item?: IProjects) => {
-	if (item) {
-		isShowDetailsDialog.value = true
-		cachedItem.value = item as IProjects
-	} else router.push(`/dashboard/projects/details`)
-}
-const onDeleteItem = (item?: IProjects) => {
-	cachedItem.value = item as IProjects
-	isConfirmDeleteDialogOpen.value = true
-}
-const onDeleteItemComplete = async () => {
-	if (!cachedItem.value) return
-	isConfirmDeleteDialogOpen.value = false
-	isLoadingList.value = true
-	const response = await projectsService.destroy(cachedItem.value.id).catch(() => {})
-	console.log(response)
-	if (!response) {
-		isLoadingList.value = false
-		return toast({
-			variant: "destructive",
-			title: t("GENERAL.ERROR"),
-			description: t("GENERAL.FAIL_DELETE_ITEM"),
-			duration: 5000
-		})
-	}
-	await fetchData()
-	isLoadingList.value = false
-}
 
-const ItemsToShow = ref([
-	{ label: t("PROJECTS.NAME"), value: "name", type: "text" },
-	{ label: t("PROJECTS.STATUS"), value: "is_active", type: "badge" },
-	{
-		label: t("PROJECTS.LUNCHED_DATE"),
-		value: "created_at",
-		type: "date"
-	},
-	{
-		label: t("PROJECTS.CREATED_AT"),
-		value: "created_at",
-		type: "date"
-	}
-])
 
-const onTableRowAction = (action: string, payload?: IProjects) => {
-	switch (action) {
-		case "EDIT":
-			return onCreateItem(payload)
-		case "DELETE":
-			return onDeleteItem(payload)
-		default:
-			break
-	}
-}
-const onVisibileITemsChanged = (items: any) => {
-	return (ItemsToShow.value = items as any)
-}
 </script>
