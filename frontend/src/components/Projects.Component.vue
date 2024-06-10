@@ -33,11 +33,10 @@
 			<div class="projects-section  justify-items-center bg-[url('/images/projects-hero22.png')] bg-no-repeat backy2">
   <div class="project-card" v-for="project in projects" :key="project.id">
     <div class="project-thumbnail">
-      <img :src=project.img alt="Project 1 thumbnail">
+      <img src="/images/hd.jpg" alt="Project 1 thumbnail">
     </div>
-    <h2 class="font-extrabold text-3xl">{{project.name}}</h2>
-    
-    <p>{{project.description}}</p>
+    <h2 class="font-extrabold text-3xl"> {{project.name}}</h2>
+    <h3>{{ project.description }}</h3> 
     <button class="details-btn">View Details</button>
   </div>
   <div class="project-card">
