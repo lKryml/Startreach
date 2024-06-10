@@ -3,7 +3,7 @@
 		<div class="hidden bg-muted lg:block">
 			<video
 				src="https://cdn.dribbble.com/uploads/48226/original/b8bd4e4273cceae2889d9d259b04f732.mp4?1689028949"
-				class="h-full object-cover w-full bg-[url('https://cdn.dribbble.com/uploads/48226/original/b8bd4e4273cceae2889d9d259b04f732.mp4?1689028949')] bg-[center_-283px]"
+				class="h-full object-cover w-full bg-[url('https://cdn.dribbble.com/uploads/48226/original/b8bd4e4273cceae2889d9d259b04f732.mp4?1689028949')] bg-[center_-283px]" autoplay
 			></video>
 		</div>
 		<div class="flex items-center flex-col justify-start">

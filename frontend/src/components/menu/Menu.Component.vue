@@ -16,8 +16,12 @@
 				</div>
 			</div>
 			<div class="btn-area flex gap-8 mr-10 ">
+				<router-link to="/about">
 				<a class="cursor-pointer">Learn more</a>
+			</router-link>
+				<router-link to="/auth/register">
 				<a class="cursor-pointer">Sign up</a>
+			</router-link>
 			</div>
 		</div>
 		</div>

@@ -2,10 +2,10 @@
 <template>
     <section id="hero" class="bg-[url('/images/projects-hero.png')] bg-no-repeat backy w-full">
 		<div
-			class=" h-dvh gap-0 w-full justify-center items-center  border-green-600 border mb-0"
+			class=" h-dvh gap-0 w-full justify-center items-center   mb-0"
 		>
 			<div
-				class="flex-1 flex-col h-full flex justify-center items-end bg-transparent px-10 md:px-40 mb-0  border-red-600 border mt-16"
+				class="flex-1 flex-col h-full flex justify-center items-end bg-transparent px-10 md:px-40 mb-0   mt-16"
 			>
 				<div class="pb-8 w-full">
 					<div
@@ -21,16 +21,21 @@
 					<img class="mx-auto h-2/4 pb-10 " src="/images/strarrow.png">
 				</div>
 				<div class="w-full flex flex-col ">
-			<div class="w-full flex justify-center align-center gap-28 text-2xl font-extrabold drop-shadow-2xl pb-16"><a>All</a><a>Trending Startups</a><a>Top Startups</a><a>Latest Startups</a></div>
+			<div class="w-full flex justify-center align-center gap-28 text-2xl font-bold drop-shadow-2xl pb-16 ">
+				
+				<a :class="{ 'target:font-extrabolde': filter === 'all' }">All</a>
+            <a :class="{ 'target:font-extrabolde': filter === 'trending' }">Trending Startups</a>
+            <a :class="{ 'target:font-extrabolde': filter === 'top' }">Top Startups</a>
+            <a :class="{ 'target:font-extrabolde': filter === 'latest' }">Latest Startups</a></div>
 			</div>
 			
 			</div>
-			<div class="projects-section border-black border justify-items-center bg-[url('/images/projectsglow.png')] bg-no-repeat backy2">
+			<div class="projects-section  justify-items-center bg-[url('/images/projects-hero22.png')] bg-no-repeat backy2">
   <div class="project-card">
     <div class="project-thumbnail">
       <img src="/images/hd.jpg" alt="Project 1 thumbnail">
     </div>
-    <h2>Project Title 1</h2>
+    <h2 class="font-extrabold text-3xl">Chat GPT</h2>
     <p class="subheading">Project Subheading 1</p>
     <p>Project details go here. Lorem ipsum dolor sit amet...</p>
     <button class="details-btn">View Details</button>
@@ -58,7 +63,7 @@
       <img src="/images/hd.jpg" alt="Project 4 thumbnail">
     </div>
     <h2>Project Title 4</h2>
-    <p class="subheading">Project Subheading 4</p>
+    <p class="subheading ">Project Subheading 4</p>
     <p>Project details go here. Lorem ipsum dolor sit amet...</p>
     <button class="details-btn">View Details</button>
   </div>
@@ -75,8 +80,9 @@
 }
 .backy2{
 	background-size: cover;
-	background-position: 100% 0%;
+	background-position: 75% 50%;
 }
+
 .top-startups{
 	color:rgb(254, 145, 104);
 }
@@ -92,40 +98,29 @@
 }
 
 .project-card {
+	margin-top: 20px;
   width: 625px;
   height: 575px;
-  background-color: #fff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: transparent;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
   padding: 20px; /* Adds padding for content */
 }
-
-.project-card h2 {
-  font-size: 24px;
-  margin-bottom: 10px;
+.target:font-extrabolde {
+  font-weight: extrabold; /* Style the active link to be bolder */
+  color: rgb(104, 254, 111) !important; /* Optional: Change link color for better distinction */
 }
 
-.project-card .subheading,
-.project-card .details-btn {
-  margin-top: 10px;
-}
 
-.project-card .subheading {
-  font-size: 16px;
-  color: #666;
-}
 
-.project-card .details-btn {
-  background-color: #007bff;
-  color: #fff;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
+
+
+
 
 .project-thumbnail {
+	border-radius: 3px;
+	cursor: pointer;
   width: 100%; /* Stretches to full card width */
-  height: 200px; /* Adjust height as needed */
+  height: 325px; /* Adjust height as needed */
   margin-bottom: 10px; /* Adds spacing below the image */
   overflow: hidden; /* Ensures image doesn't overflow container */
 }
@@ -136,3 +131,6 @@
   object-fit: cover; /* Scales image to cover the container */
 }
 </style>
+<script setup lang="ts">
+let filter:string = 'all';
+</script>
