@@ -93,7 +93,7 @@ const outServicesArray = [
 				</div>
 
 				<div
-					class="text-foreground flex flex-row-reverse justify-start items-center text-lg md:text-md font-bold   "
+					class="text-foreground flex flex-row-reverse justify-start items-center text-lg md:text-md font-bold mr-auto   "
 				>
 					<router-link to="/auth/register">
 						<Button
@@ -126,7 +126,7 @@ const outServicesArray = [
 			<div
 				v-for="(_, index) in partnersImagesPaths"
 				:key="index" 
-				class="w-24 max-h-20 justify-center items-center"
+				class="w-24 max-h-20 justify-center items-center grayscale"
 			>
 				<img :src="_" />
 			</div>

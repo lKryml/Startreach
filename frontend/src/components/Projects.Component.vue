@@ -2,51 +2,135 @@
 <template>
     <section id="hero" class="bg-[url('/images/projects-hero.png')] bg-no-repeat backy w-full">
 		<div
-			class=" h-dvh gap-0 w-full justify-center items-center"
+			class=" h-dvh gap-0 w-full justify-center items-center   mb-0"
 		>
 			<div
-				class="flex-1 flex-col h-full flex justify-center items-end bg-transparent px-10 md:px-40"
+				class="flex-1 flex-col h-full flex justify-center items-end bg-transparent px-10 md:px-40 mb-0   mt-16"
 			>
-				<div class="pb-7 w-full">
+				<div class="pb-8 w-full">
 					<div
-						class="text-5xl font-extrabold flex items-start flex-col gap-5 "
+						class="text-8xl font-extrabold flex items-start flex-col gap-5  text-center"
 					>
-						<span class="w-full ">We invest in people who are Always Passionate about what they do</span>
-						
+						<span class="w-full drop-shadow-lg">We invest in people who are</span>
+						<span class="w-full drop-shadow-lg text-7xl"> Always Passionate</span>
+						<span class="w-full drop-shadow-lg text-5xl ">about what they do</span>
 					</div>
 				</div>
-				<div class="flex justify-center items-start pb-7 md:1/2 w-full">
-					<div class="self-end ">
-						Empowering Entreprenuers to Connect Investors, Empowering Entreprenuers to
-						Connect InvestorsEmpowering Entreprenuers to Connect Investors
-					</div>
+				<div class=" w-full  flex flex-col justify-center text-center gap-10">
+					<h3 class="top-startups text-4xl drop-shadow-xl pb-8">See our top Startups</h3>
+					<img class="mx-auto h-2/4 pb-10 " src="/images/strarrow.png">
 				</div>
-
-				<div
-					class="text-foreground flex flex-row-reverse justify-start items-center text-lg md:text-md font-bold   "
-				>
-					<router-link to="/auth/register">
-						<Button
-							class="cursor-pointer rounded-full shadow-none ms-4 w-60 md:w-45 sm:w-30 h-14 bg-secondary text-secondary-foreground "
-							>awdaw</Button
-						>
-					</router-link>
-
-					<router-link to="/about">
-						<Button
-							class="cursor-pointer rounded-full shadow-none w-60 md:w-45 sm:w-30 h-14 bg-transparent border-primary border-[2px] text-foreground"
-							>dawdawdaw</Button
-						></router-link>
-				</div>
+				<div class="w-full flex flex-col ">
+			<div class="w-full flex justify-center align-center gap-28 text-2xl font-bold drop-shadow-2xl pb-16 ">
+				
+				<a :class="{ 'target:font-extrabolde': filter === 'all' }">All</a>
+            <a :class="{ 'target:font-extrabolde': filter === 'trending' }">Trending Startups</a>
+            <a :class="{ 'target:font-extrabolde': filter === 'top' }">Top Startups</a>
+            <a :class="{ 'target:font-extrabolde': filter === 'latest' }">Latest Startups</a></div>
 			</div>
 			
+			</div>
+			<div class="projects-section  justify-items-center bg-[url('/images/projects-hero22.png')] bg-no-repeat backy2">
+  <div class="project-card">
+    <div class="project-thumbnail">
+      <img src="/images/hd.jpg" alt="Project 1 thumbnail">
+    </div>
+    <h2 class="font-extrabold text-3xl">Chat GPT</h2>
+    <p class="subheading">Project Subheading 1</p>
+    <p>Project details go here. Lorem ipsum dolor sit amet...</p>
+    <button class="details-btn">View Details</button>
+  </div>
+  <div class="project-card">
+    <div class="project-thumbnail">
+      <img src="/images/hd.jpg" alt="Project 2 thumbnail">
+    </div>
+    <h2>Project Title 2</h2>
+    <p class="subheading">Project Subheading 2</p>
+    <p>Project details go here. Lorem ipsum dolor sit amet...</p>
+    <button class="details-btn">View Details</button>
+  </div>
+  <div class="project-card">
+    <div class="project-thumbnail">
+      <img src="/images/hd.jpg" alt="Project 3 thumbnail">
+    </div>
+    <h2>Project Title 3</h2>
+    <p class="subheading">Project Subheading 3</p>
+    <p>Project details go here. Lorem ipsum dolor sit amet...</p>
+    <button class="details-btn">View Details</button>
+  </div>
+  <div class="project-card">
+    <div class="project-thumbnail">
+      <img src="/images/hd.jpg" alt="Project 4 thumbnail">
+    </div>
+    <h2>Project Title 4</h2>
+    <p class="subheading ">Project Subheading 4</p>
+    <p>Project details go here. Lorem ipsum dolor sit amet...</p>
+    <button class="details-btn">View Details</button>
+  </div>
+</div>
+		
 		</div>
+		
 	</section>
 </template>
 <style scoped>
 .backy{
 	background-size: cover;
 	background-position: 75% 0%;
+}
+.backy2{
+	background-size: cover;
+	background-position: 75% 50%;
+}
 
+.top-startups{
+	color:rgb(254, 145, 104);
+}
+.drop-shadow-xl {
+    filter: drop-shadow(0 5px 10px rgba(254, 145, 104,0.40)); /* Red color with opacity */
+  }
+
+.projects-section {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* Defines two columns of equal width */
+  grid-gap: 20px; /* Optional spacing between project cards */
+  
+}
+
+.project-card {
+	margin-top: 20px;
+  width: 625px;
+  height: 575px;
+  background-color: transparent;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  padding: 20px; /* Adds padding for content */
+}
+.target:font-extrabolde {
+  font-weight: extrabold; /* Style the active link to be bolder */
+  color: rgb(104, 254, 111) !important; /* Optional: Change link color for better distinction */
+}
+
+
+
+
+
+
+
+.project-thumbnail {
+	border-radius: 3px;
+	cursor: pointer;
+  width: 100%; /* Stretches to full card width */
+  height: 325px; /* Adjust height as needed */
+  margin-bottom: 10px; /* Adds spacing below the image */
+  overflow: hidden; /* Ensures image doesn't overflow container */
+}
+
+.project-thumbnail img {
+  width: 100%; /* Stretches image to fit container */
+  height: 100%; /* Stretches image to fit container */
+  object-fit: cover; /* Scales image to cover the container */
 }
 </style>
+<script setup lang="ts">
+let filter:string = 'all';
+</script>

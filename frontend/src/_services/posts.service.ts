@@ -1,7 +1,7 @@
 import type { IPagination, IResponse } from "@/_interfaces/global.interface"
 import type { IPosts } from "@/_interfaces/posts.interface"
 import { prepareSearchPagination } from "@/_libs/requestify.lib"
-import { HttpClient } from "@/classes/httpClient"
+import { HttpClient } from "@/_interfaces/httpClient"
 
 const http = new HttpClient()
 export const _controller = "posts"
