@@ -75,7 +75,9 @@ const emit = defineEmits<{
 				<div
 					class="h-[var(--dashboard-navbar-height)] flex justify-center items-center font-extrabold text-xl border-b-[1px] border-border mb-8"
 				>
-					<PanelRightOpenIcon class="w-[24px] me-2"></PanelRightOpenIcon>
+					<RouterLink to="/">
+						<PanelRightOpenIcon class="w-[24px] me-2"></PanelRightOpenIcon>
+					</RouterLink>
 					{{ appName }}
 				</div>
 				<div

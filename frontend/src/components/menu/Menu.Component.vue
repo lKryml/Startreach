@@ -12,7 +12,9 @@
 					<RouterLink to="/"> Startups </RouterLink>
 					<RouterLink to="/"> Investors </RouterLink>
 					<RouterLink to="/projects"> Projects </RouterLink>
-					<RouterLink to="/"> More </RouterLink>
+					<RouterLink to="/"> Events </RouterLink>
+					<RouterLink to="/"> Accelerator </RouterLink>
+					
 				</div>
 			</div>
 			<div class="btn-area flex gap-8 mr-10 ">

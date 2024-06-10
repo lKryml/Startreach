@@ -31,13 +31,12 @@
 			
 			</div>
 			<div class="projects-section  justify-items-center bg-[url('/images/projects-hero22.png')] bg-no-repeat backy2">
-  <div class="project-card">
+  <div class="project-card" v-for="project in projects" :key="project.id">
     <div class="project-thumbnail">
       <img src="/images/hd.jpg" alt="Project 1 thumbnail">
     </div>
-    <h2 class="font-extrabold text-3xl">Chat GPT</h2>
-    <p class="subheading">Project Subheading 1</p>
-    <p>Project details go here. Lorem ipsum dolor sit amet...</p>
+    <h2 class="font-extrabold text-3xl"> {{project.name}}</h2>
+    <h3>{{ project.description }}</h3> 
     <button class="details-btn">View Details</button>
   </div>
   <div class="project-card">
@@ -70,8 +69,19 @@
 </div>
 		
 		</div>
-		
+		<div class="text-xs text-muted-foreground">
+							<PaginationComponent
+								:disabled="isLoadingList"
+								:items-perpage="pagination.per_page"
+								:total="pagination.total"
+								:current-page="pagination.page"
+								@onpagechanged="(page: number) => fetchData(page)"
+							></PaginationComponent>
+							<!-- Showing <strong>1-10</strong> of <strong>32</strong>
+							products -->
+						</div>
 	</section>
+  
 </template>
 <style scoped>
 .backy{
@@ -132,5 +142,48 @@
 }
 </style>
 <script setup lang="ts">
-let filter:string = 'all';
+let filter: string = 'all';
+import * as projectsService from "@/_services/projects.service"
+import { usePagination } from "@/_libs/usePagination"
+import { useRouter, useRoute } from "vue-router"
+import type { IProjects, IResponse } from "@/_interfaces"
+// import ItemCard from "@/components/ui/ItemCard.vue"
+import PanelTitle from "@/components/menu/PanelTitle.vue"
+import FilterComponent from "@/components/Filter.Component.vue"
+import PageIntroducerComponent from "@/components/ui/PageIntroducer.Component.vue"
+import PaginationComponent from "@/components/Pagination.Component.vue"
+import LoadingDataCardComponent from "@/components/ui/LoadingDataCard.Component.vue"
+import ConfirmComponent from "@/components/ui/Confirm.Component.vue"
+import ActionTableComponent from "@/components/ActionTable.Component.vue"
+import { useI18n } from "vue-i18n"
+import { onBeforeMount } from "vue"
+import { ref } from "vue"
+import { useToast } from "@/shared/shadcn-ui/ui"
+
+
+onBeforeMount(async () => await fetchData())
+const route = useRoute()
+
+const { pagination } = usePagination(route)
+const isLoadingList = ref(false)
+
+const projects = ref<IProjects[]>([])
+const fetchData = async (page?: number) => {
+	isLoadingList.value = true
+	if (page) {
+		await new Promise((resolve) => setTimeout(resolve, 500000000))
+	}
+	pagination.page = page || pagination.page
+	const response: IResponse<IProjects[]> | null = (await projectsService
+		.find(pagination)
+		.catch((err) => console.error(err))) as IResponse<IProjects[]>
+	isLoadingList.value = false
+	if (response?.data) {
+		projects.value = response.data || []
+		pagination.total = response.count || 0
+	}
+}
+
+
+
 </script>

@@ -231,7 +231,7 @@ const onVisibileITemsChanged = (items: any) => {
 					v-else
 					:title="t('PROJECTS.ADD_NEW')"
 					:description="t('PROJECTS.DESCRIPTION')"
-					image="http://localhost:8080/src/assets/images/add-new-item.jpg"
+					image="/images/add-new-item.jpg"
 					:add-title="t('PROJECTS.ADD_NEW')"
 					@onaddnew="() => onCreateItem()"
 				></PageIntroducerComponent>
