@@ -12,6 +12,7 @@ class UsersTypesModel(BaseModel):
     EDUCATION: int = 6
     SYNDICATE: int = 7
     ALL:int = 100
+    Nil:int = 999
 
 UserTypes = UsersTypesModel()
 

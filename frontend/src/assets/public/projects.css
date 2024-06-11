@@ -1,0 +1,11 @@
+.backy {
+	background-size: cover;
+	background-position: 75% 0%;
+}
+.backy2 {
+	background-size: cover;
+	background-position: 75% 50%;
+}
+.drop-shadow-xl {
+	filter: drop-shadow(0 5px 10px #fe916866); /* Red color with opacity */
+}

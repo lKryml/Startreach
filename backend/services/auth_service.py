@@ -90,6 +90,8 @@ def hash_pass(password: str):
 
 def auth_protecter(roles: list[int] | None = None, is_superuser=False):
     async def protector(req: Request):
+        if UserTypes.Nil in roles:
+            return True
         # DELETE ON PRODUCTION MODE
         # if app_config.get('enviroment') == 'development':
         #     logger.error("DELETE ON PRODUCTION MODE auth_service.auth_protecter line:91")

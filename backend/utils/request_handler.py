@@ -51,6 +51,8 @@ def append_body(item: BaseModel | dict, user: UserModel):
     return item
 
 def whereify(user: UserModel):
+    if not isinstance(user, UserModel):
+        return {}
     return {
         "profile_id": user.profile_id,
     }

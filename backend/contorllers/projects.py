@@ -22,7 +22,7 @@ async def create_project(body: ProjectsModel, user: UserModel = Depends(auth_pro
 
 
 @router.get('/api/projects')
-async def get_projects(req: Request, user: UserModel = Depends(auth_protecter())):
+async def get_projects(req: Request, user: UserModel = Depends(auth_protecter([UserTypes.Nil]))):
     try:
         pagination: PaginationModel = PaginationModel(
             page=int(req.query_params.get('page', '1')),
@@ -41,7 +41,7 @@ async def get_projects(req: Request, user: UserModel = Depends(auth_protecter())
 
 
 @router.get('/api/projects/{id}')
-async def get_project(id: str, user: UserModel = Depends(auth_protecter())):
+async def get_project(id: str, user: UserModel = Depends(auth_protecter([UserTypes.Nil]))):
     id = get_id_param(id)
     if id is None or id < 0:
         return throw_exception({"message": "please provide the correct id"}, HTTPStatus.UNPROCESSABLE_ENTITY)
@@ -78,11 +78,6 @@ async def delete_project(id: str, user: UserModel = Depends(auth_protecter)):
 
 @router.post('/api/projects/images')
 async def upload_image(file: Union[UploadFile, None] = None, user: UserModel = Depends(auth_protecter)):
-    print(file)
-    if not file:
-        return {"message": "No upload file sent"}
-    else:
-        return {"filename": file.filename}
     [image_files, err] = projects_service.upload_images(file)
     if image_files:
         return response_json(image_files)
