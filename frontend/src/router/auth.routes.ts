@@ -15,6 +15,10 @@ const authRoutes = [
         path: 'register',
         name: 'register',
         component: () => import(/* webpackChunkName: "about" */ '../views/auth/RegisterView.vue')
-    }
+    },
+    // {
+    //     path: ":pathMatch(.*)*",
+    //     redirect: "/auth/login" // Redirect any unknown /auth routes to /auth/login
+    // },
 ]
 export default authRoutes;

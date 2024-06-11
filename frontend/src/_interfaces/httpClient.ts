@@ -5,7 +5,6 @@ export class HttpClient {
 	private baseUrl: string
 	constructor() {
 		this.baseUrl = enviroment.apiUrl
-		console.log(this.baseUrl)
 	}
 	private _getHeaders() {
 		const token = localStorage.getItem("access_token")

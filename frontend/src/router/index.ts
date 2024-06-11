@@ -8,14 +8,16 @@ import type { IUsers } from "@/_interfaces/users.interface"
 
 const routes = [
 	{
+		path: "/",
+		name: "publicIndex",
+		component: import("../views/public/IndexView.vue"),
+		children: publicRoutes
+	},
+	{
 		path: "/auth",
 		name: "authIndex",
 		component: import("../views/auth/AuthIndexView.vue"),
 		children: authRoutes
-	},
-	{
-		path: "/auth/:pathMatch(.*)*",
-		redirect: "/auth/login" // Redirect any unknown /auth routes to /auth/login
 	},
 	{
 		path: "/dashboard",
@@ -27,11 +29,6 @@ const routes = [
 		}
 	},
 	{
-		path: "/projects",
-		name: "projects",
-		component: import("../views/ProjectsView.vue")
-	},
-	{
 		path: "/r00t",
 		name: "rootIndex",
 		component: import("../views/root/RootView.vue"),
@@ -40,12 +37,6 @@ const routes = [
 			requiresAuth: true,
 			isSuperUSer: true
 		}
-	},
-	{
-		path: "/",
-		name: "publicIndex",
-		component: import("../views/public/IndexView.vue"),
-		children: publicRoutes
 	},
 	{
 		path: "/:pathMatch(.*)*",
@@ -59,12 +50,12 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-	// console.log(to, from)
-	if (!to.matched.some((record) => record.meta.requiresAuth)) next()
+	console.log(to, from)
+	if (!to.matched.find((record) => record.meta.requiresAuth)) return next()
 	// ----------------------------------------------------------------
 	const currentUser: IUsers = JSON.parse(localStorage.getItem("currentUser") || "{}")
 	if (!currentUser?.access_token) return next({ name: "login" })
-	if (to.matched.some((record) => record.meta.isSuperUSer) && !currentUser.is_root)
+	if (to.matched.find((record) => record.meta.isSuperUSer) && !currentUser.is_root)
 		return next({ name: "login" })
 	next()
 })
