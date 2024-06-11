@@ -8,11 +8,11 @@
 					<Logo />
 					<!-- <img src="../../../assets/logo.png" class="w-9 h-auto max-h-9" /> -->
 					<div class="flex justify-between w-2/4 pl-16 gap-6">
-						<RouterLink to="/"> Startups </RouterLink>
-						<RouterLink to="/"> Investors </RouterLink>
-						<RouterLink to="/projects"> Projects </RouterLink>
-						<RouterLink to="/"> Events </RouterLink>
-						<RouterLink to="/"> Accelerator </RouterLink>
+						<RouterLink to="/projects"> Startups </RouterLink>
+						<RouterLink to="/investors"> Investors </RouterLink>
+						<RouterLink to="/investors"> Webinars </RouterLink>
+						<RouterLink to="/events"> Events </RouterLink>
+						<RouterLink to="/accelerator"> Accelerator </RouterLink>
 					</div>
 				</div>
 				<div class="btn-area flex gap-8 mr-10">
