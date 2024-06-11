@@ -128,27 +128,10 @@ const onSubmitFormErrors = () => {
 }
 const onSubmit = handleSubmit(onSubmitForm, onSubmitFormErrors)
 const onFileChanged = async ($event: any) => {
-	// const target = $event.target as HTMLInputElement
-	// if (target.files && target.files[0]) {
-	// 	const formData = new FormData()
-	// 	formData.append("file", target.files[0])
-	// 	try {
-	// 		const response = await projectsService.uploadImage(null, formData)
-	// 		if (!response)
-	// 			return toast({
-	// 				variant: "destructive",
-	// 				title: t("GENERAL.ERROR"),
-	// 				description: t("GENERAL.UPLOAD_IMAGE_GOES_WRONG")
-	// 			})
-	// 		console.log(response.data)
-	// 	} catch (error) {
-	// 		console.error(error)
-	// 	}
-	// }
-	assignFileFromInput({ $event, translator: t, signal: img64, toast, fileType: "image" }, () => {
-		const splitter = $event.target.files?.[0]?.name.split(".")
-		img.value = `${$event?.files?.[0]?.size}-${splitter[splitter.length - 1]}`
-	})
+	assignFileFromInput(
+		{ $event, translator: t, signal: img64, toast, fileType: "image" },
+		() => {}
+	)
 }
 </script>
 <template>

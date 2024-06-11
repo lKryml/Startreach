@@ -124,7 +124,10 @@ const onSubmitFormErrors = () => {
 }
 const onSubmit = handleSubmit(onSubmitForm, onSubmitFormErrors)
 const onFileChanged = async ($event: any) => {
-	assignFileFromInput({ $event, translator: t, signal: img64, toast, fileType: "image" })
+	assignFileFromInput(
+		{ $event, translator: t, signal: img64, toast, fileType: "image" },
+		() => {}
+	)
 }
 </script>
 <template>
