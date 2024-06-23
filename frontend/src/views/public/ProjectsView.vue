@@ -116,7 +116,7 @@ const onInvestProject = (event: MouseEvent, project: IProjects) => {
 									>
 										<img
 											class="w-full h-full object-cover"
-											:src="project.img || '/images/hd.jpg'"
+											:src="'/images/hd.jpg' || project.img"
 											:alt="project.name"
 										/>
 									</div>
